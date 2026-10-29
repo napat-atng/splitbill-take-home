@@ -1,7 +1,7 @@
 # SplitBill — Checklist
 
 ใช้คู่กับ PLAN.md ติ๊ก [x] เมื่อทำเสร็จและตรวจแล้วเท่านั้น
-อัปเดต: Backend API และ Business rules ครบแล้ว; pytest 70 กรณีผ่าน รวม required tests, PostgreSQL จริง และ concurrent API requests ขั้นถัดไปคือ Frontend
+อัปเดต: Frontend ครบและผ่าน unit tests 4 กรณี, browser tests 8 กรณี (desktop/mobile), lint/typecheck/build และรีวิวภาพหน้าจอ ขั้นถัดไปคือ final review และเตรียมส่ง
 
 วันที่ได้รับโจทย์: __________ | กำหนดส่ง (7 วันปฏิทิน): __________
 
@@ -80,32 +80,32 @@
 
 ## 7. Frontend
 
-- [ ] หน้าเดียว เลือกผู้ใช้และแสดงเฉพาะกลุ่มของผู้ใช้นั้น
-- [ ] ฟอร์มมี description, amount, payer และ equal/exact split
-- [ ] Equal เลือกสมาชิกที่ร่วมแบ่งได้
-- [ ] Exact ระบุยอดแต่ละคนได้
-- [ ] Preview อัปเดตขณะกรอกและตรงกับ backend ทุกสตางค์
-- [ ] Exact แสดงยอดยังไม่จัดสรร และ disable submit จนยอดรวมตรง
-- [ ] คำนวณด้วย integer satang; 0.1 + 0.2 แสดง 0.30
-- [ ] Format เงินแบบไทย เช่น 1,000.00
-- [ ] แยกยอดต้องรับและต้องจ่ายอย่างชัดเจน
-- [ ] แสดง expense list และ balances จาก API
-- [ ] หลังเพิ่ม/ลบสำเร็จ อัปเดตข้อมูลที่เกี่ยวข้อง
-- [ ] แสดง API errors เป็นภาษาที่เข้าใจง่าย
-- [ ] มี loading, empty, error states และป้องกันการส่งซ้ำระหว่างรอ
-- [ ] Retry รายการเดิมใช้ idempotency key เดิม
-- [ ] เปลี่ยน user/group แล้วไม่แสดงข้อมูลค้างจากกลุ่มเก่า
+- [x] หน้าเดียว เลือกผู้ใช้และแสดงเฉพาะกลุ่มของผู้ใช้นั้น
+- [x] ฟอร์มมี description, amount, payer และ equal/exact split
+- [x] Equal เลือกสมาชิกที่ร่วมแบ่งได้
+- [x] Exact ระบุยอดแต่ละคนได้
+- [x] Preview อัปเดตขณะกรอกและตรงกับ backend ทุกสตางค์
+- [x] Exact แสดงยอดยังไม่จัดสรร และ disable submit จนยอดรวมตรง
+- [x] คำนวณด้วย integer satang; 0.1 + 0.2 แสดง 0.30
+- [x] Format เงินแบบไทย เช่น 1,000.00
+- [x] แยกยอดต้องรับและต้องจ่ายอย่างชัดเจน
+- [x] แสดง expense list และ balances จาก API
+- [x] หลังเพิ่ม/ลบสำเร็จ อัปเดตข้อมูลที่เกี่ยวข้อง
+- [x] แสดง API errors เป็นภาษาที่เข้าใจง่าย
+- [x] มี loading, empty, error states และป้องกันการส่งซ้ำระหว่างรอ
+- [x] Retry รายการเดิมใช้ idempotency key เดิม
+- [x] เปลี่ยน user/group แล้วไม่แสดงข้อมูลค้างจากกลุ่มเก่า
 
 ## 8. README.md
 
-- [ ] วิธี setup จาก fresh clone รวม prerequisites, env, migrate, seed และ start ทั้งสองฝั่ง
+- [x] วิธี setup จาก fresh clone รวม prerequisites, env, migrate, seed และ start ทั้งสองฝั่ง
 - [x] คำสั่งเดียวสำหรับ pytest และคำสั่ง lint/build ที่รันได้จริง
 - [x] อธิบาย architecture และการแยกหน้าที่
 - [x] อธิบายการเลือก 403/404 พร้อมเหตุผล
-- [ ] อธิบาย money storage, Decimal, integer satang และรูปแบบ API
-- [ ] อธิบายการแจกเศษสตางค์และ preview ให้ตรง backend
+- [x] อธิบาย money storage, Decimal, integer satang และรูปแบบ API
+- [x] อธิบายการแจกเศษสตางค์และ preview ให้ตรง backend
 - [x] อธิบาย idempotency รวม concurrent requests
-- [ ] บันทึกความกำกวมและสมมติฐานที่เลือกใช้ทั้งหมด
+- [x] บันทึกความกำกวมและสมมติฐานที่เลือกใช้ทั้งหมด
 - [ ] ระบุ known limitations, next steps และเวลาที่ใช้โดยประมาณ
 
 ## 9. AI_NOTES.md
@@ -114,16 +114,16 @@
 - [x] ยกตัวอย่าง prompt ที่ได้ผล 1–2 ตัวอย่าง
 - [x] บันทึก AI output ที่ผิด/ไม่ปลอดภัยอย่างน้อย 1 กรณีที่เกิดขึ้นจริง
 - [x] อธิบายวิธีตรวจพบและการแก้ไข โดยไม่แต่งเหตุการณ์ขึ้น
-- [ ] อธิบายกระบวนการ review โค้ดจาก AI ก่อนแต่ละ commit
+- [x] อธิบายกระบวนการ review โค้ดจาก AI ก่อนแต่ละ commit
 - [ ] สามารถอธิบายและรับผิดชอบโค้ดที่ส่งได้ทุกส่วน
 
 ## 10. Final checks และส่งงาน
 
 - [ ] pytest ผ่านครบ
-- [ ] Ruff และ ESLint ผ่าน
-- [ ] TypeScript check และ frontend production build ผ่าน
-- [ ] ทดสอบใช้งานจริงตั้งแต่เลือก user/group จนเพิ่ม expense และดู balance
-- [ ] ทดสอบ API การลบและสิทธิ์ผู้ลบจริง
+- [x] Ruff และ ESLint ผ่าน
+- [x] TypeScript check และ frontend production build ผ่าน
+- [x] ทดสอบใช้งานจริงตั้งแต่เลือก user/group จนเพิ่ม expense และดู balance
+- [x] ทดสอบ API การลบและสิทธิ์ผู้ลบจริง
 - [ ] ทดลอง setup/test ตาม README จาก fresh clone สำเร็จ
 - [ ] ตรวจว่าไม่มี secrets ทั้งไฟล์ปัจจุบันและ Git history
 - [ ] ตรวจ incremental commit history และเอกสารฉบับสุดท้าย

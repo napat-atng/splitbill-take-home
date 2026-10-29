@@ -1,0 +1,447 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-29T15:42:53.546Z",
+  "title": "Design System: SplitBill",
+  "extensions": {
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "ground",
+        "tonalRamp": [
+          "oklch(15% 0.00507 145.54)",
+          "oklch(26.43% 0.00507 145.54)",
+          "oklch(37.86% 0.00507 145.54)",
+          "oklch(49.29% 0.00507 145.54)",
+          "oklch(60.71% 0.00507 145.54)",
+          "oklch(72.14% 0.00507 145.54)",
+          "oklch(83.57% 0.00507 145.54)",
+          "oklch(95% 0.00507 145.54)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "surface",
+        "tonalRamp": [
+          "oklch(15% 0.00000 89.88)",
+          "oklch(26.43% 0.00000 89.88)",
+          "oklch(37.86% 0.00000 89.88)",
+          "oklch(49.29% 0.00000 89.88)",
+          "oklch(60.71% 0.00000 89.88)",
+          "oklch(72.14% 0.00000 89.88)",
+          "oklch(83.57% 0.00000 89.88)",
+          "oklch(95% 0.00000 89.88)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "ink",
+        "tonalRamp": [
+          "oklch(15% 0.03707 164.55)",
+          "oklch(26.43% 0.03707 164.55)",
+          "oklch(37.86% 0.03707 164.55)",
+          "oklch(49.29% 0.03707 164.55)",
+          "oklch(60.71% 0.03707 164.55)",
+          "oklch(72.14% 0.03707 164.55)",
+          "oklch(83.57% 0.03707 164.55)",
+          "oklch(95% 0.03707 164.55)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "muted",
+        "tonalRamp": [
+          "oklch(15% 0.02561 159.60)",
+          "oklch(26.43% 0.02561 159.60)",
+          "oklch(37.86% 0.02561 159.60)",
+          "oklch(49.29% 0.02561 159.60)",
+          "oklch(60.71% 0.02561 159.60)",
+          "oklch(72.14% 0.02561 159.60)",
+          "oklch(83.57% 0.02561 159.60)",
+          "oklch(95% 0.02561 159.60)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "line",
+        "tonalRamp": [
+          "oklch(15% 0.01345 152.59)",
+          "oklch(26.43% 0.01345 152.59)",
+          "oklch(37.86% 0.01345 152.59)",
+          "oklch(49.29% 0.01345 152.59)",
+          "oklch(60.71% 0.01345 152.59)",
+          "oklch(72.14% 0.01345 152.59)",
+          "oklch(83.57% 0.01345 152.59)",
+          "oklch(95% 0.01345 152.59)"
+        ]
+      },
+      "green": {
+        "role": "primary",
+        "displayName": "green",
+        "tonalRamp": [
+          "oklch(15% 0.08036 161.59)",
+          "oklch(26.43% 0.08036 161.59)",
+          "oklch(37.86% 0.08036 161.59)",
+          "oklch(49.29% 0.08036 161.59)",
+          "oklch(60.71% 0.08036 161.59)",
+          "oklch(72.14% 0.08036 161.59)",
+          "oklch(83.57% 0.08036 161.59)",
+          "oklch(95% 0.08036 161.59)"
+        ]
+      },
+      "green-light": {
+        "role": "primary",
+        "displayName": "green light",
+        "tonalRamp": [
+          "oklch(15% 0.01240 157.00)",
+          "oklch(26.43% 0.01240 157.00)",
+          "oklch(37.86% 0.01240 157.00)",
+          "oklch(49.29% 0.01240 157.00)",
+          "oklch(60.71% 0.01240 157.00)",
+          "oklch(72.14% 0.01240 157.00)",
+          "oklch(83.57% 0.01240 157.00)",
+          "oklch(95% 0.01240 157.00)"
+        ]
+      },
+      "red": {
+        "role": "secondary",
+        "displayName": "red",
+        "tonalRamp": [
+          "oklch(15% 0.14299 27.35)",
+          "oklch(26.43% 0.14299 27.35)",
+          "oklch(37.86% 0.14299 27.35)",
+          "oklch(49.29% 0.14299 27.35)",
+          "oklch(60.71% 0.14299 27.35)",
+          "oklch(72.14% 0.14299 27.35)",
+          "oklch(83.57% 0.14299 27.35)",
+          "oklch(95% 0.14299 27.35)"
+        ]
+      },
+      "red-light": {
+        "role": "secondary",
+        "displayName": "red light",
+        "tonalRamp": [
+          "oklch(15% 0.01541 27.28)",
+          "oklch(26.43% 0.01541 27.28)",
+          "oklch(37.86% 0.01541 27.28)",
+          "oklch(49.29% 0.01541 27.28)",
+          "oklch(60.71% 0.01541 27.28)",
+          "oklch(72.14% 0.01541 27.28)",
+          "oklch(83.57% 0.01541 27.28)",
+          "oklch(95% 0.01541 27.28)"
+        ]
+      },
+      "field-border": {
+        "role": "neutral",
+        "displayName": "field border",
+        "tonalRamp": [
+          "oklch(15% 0.02036 154.84)",
+          "oklch(26.43% 0.02036 154.84)",
+          "oklch(37.86% 0.02036 154.84)",
+          "oklch(49.29% 0.02036 154.84)",
+          "oklch(60.71% 0.02036 154.84)",
+          "oklch(72.14% 0.02036 154.84)",
+          "oklch(83.57% 0.02036 154.84)",
+          "oklch(95% 0.02036 154.84)"
+        ]
+      },
+      "field-hover": {
+        "role": "neutral",
+        "displayName": "field hover",
+        "tonalRamp": [
+          "oklch(15% 0.04676 157.34)",
+          "oklch(26.43% 0.04676 157.34)",
+          "oklch(37.86% 0.04676 157.34)",
+          "oklch(49.29% 0.04676 157.34)",
+          "oklch(60.71% 0.04676 157.34)",
+          "oklch(72.14% 0.04676 157.34)",
+          "oklch(83.57% 0.04676 157.34)",
+          "oklch(95% 0.04676 157.34)"
+        ]
+      },
+      "focus": {
+        "role": "neutral",
+        "displayName": "focus",
+        "tonalRamp": [
+          "oklch(15% 0.08666 161.13)",
+          "oklch(26.43% 0.08666 161.13)",
+          "oklch(37.86% 0.08666 161.13)",
+          "oklch(49.29% 0.08666 161.13)",
+          "oklch(60.71% 0.08666 161.13)",
+          "oklch(72.14% 0.08666 161.13)",
+          "oklch(83.57% 0.08666 161.13)",
+          "oklch(95% 0.08666 161.13)"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "primary hover",
+        "tonalRamp": [
+          "oklch(15% 0.06926 160.03)",
+          "oklch(26.43% 0.06926 160.03)",
+          "oklch(37.86% 0.06926 160.03)",
+          "oklch(49.29% 0.06926 160.03)",
+          "oklch(60.71% 0.06926 160.03)",
+          "oklch(72.14% 0.06926 160.03)",
+          "oklch(83.57% 0.06926 160.03)",
+          "oklch(95% 0.06926 160.03)"
+        ]
+      },
+      "toolbar": {
+        "role": "neutral",
+        "displayName": "toolbar",
+        "tonalRamp": [
+          "oklch(15% 0.01191 145.48)",
+          "oklch(26.43% 0.01191 145.48)",
+          "oklch(37.86% 0.01191 145.48)",
+          "oklch(49.29% 0.01191 145.48)",
+          "oklch(60.71% 0.01191 145.48)",
+          "oklch(72.14% 0.01191 145.48)",
+          "oklch(83.57% 0.01191 145.48)",
+          "oklch(95% 0.01191 145.48)"
+        ]
+      },
+      "disabled-field": {
+        "role": "neutral",
+        "displayName": "disabled field",
+        "tonalRamp": [
+          "oklch(15% 0.00581 153.77)",
+          "oklch(26.43% 0.00581 153.77)",
+          "oklch(37.86% 0.00581 153.77)",
+          "oklch(49.29% 0.00581 153.77)",
+          "oklch(60.71% 0.00581 153.77)",
+          "oklch(72.14% 0.00581 153.77)",
+          "oklch(83.57% 0.00581 153.77)",
+          "oklch(95% 0.00581 153.77)"
+        ]
+      },
+      "avatar-ground": {
+        "role": "neutral",
+        "displayName": "avatar ground",
+        "tonalRamp": [
+          "oklch(15% 0.00848 145.51)",
+          "oklch(26.43% 0.00848 145.51)",
+          "oklch(37.86% 0.00848 145.51)",
+          "oklch(49.29% 0.00848 145.51)",
+          "oklch(60.71% 0.00848 145.51)",
+          "oklch(72.14% 0.00848 145.51)",
+          "oklch(83.57% 0.00848 145.51)",
+          "oklch(95% 0.00848 145.51)"
+        ]
+      },
+      "avatar-ink": {
+        "role": "neutral",
+        "displayName": "avatar ink",
+        "tonalRamp": [
+          "oklch(15% 0.05639 153.03)",
+          "oklch(26.43% 0.05639 153.03)",
+          "oklch(37.86% 0.05639 153.03)",
+          "oklch(49.29% 0.05639 153.03)",
+          "oklch(60.71% 0.05639 153.03)",
+          "oklch(72.14% 0.05639 153.03)",
+          "oklch(83.57% 0.05639 153.03)",
+          "oklch(95% 0.05639 153.03)"
+        ]
+      },
+      "success-ground": {
+        "role": "neutral",
+        "displayName": "success ground",
+        "tonalRamp": [
+          "oklch(15% 0.01993 154.89)",
+          "oklch(26.43% 0.01993 154.89)",
+          "oklch(37.86% 0.01993 154.89)",
+          "oklch(49.29% 0.01993 154.89)",
+          "oklch(60.71% 0.01993 154.89)",
+          "oklch(72.14% 0.01993 154.89)",
+          "oklch(83.57% 0.01993 154.89)",
+          "oklch(95% 0.01993 154.89)"
+        ]
+      },
+      "success-ink": {
+        "role": "neutral",
+        "displayName": "success ink",
+        "tonalRamp": [
+          "oklch(15% 0.06563 158.37)",
+          "oklch(26.43% 0.06563 158.37)",
+          "oklch(37.86% 0.06563 158.37)",
+          "oklch(49.29% 0.06563 158.37)",
+          "oklch(60.71% 0.06563 158.37)",
+          "oklch(72.14% 0.06563 158.37)",
+          "oklch(83.57% 0.06563 158.37)",
+          "oklch(95% 0.06563 158.37)"
+        ]
+      },
+      "error-ink": {
+        "role": "secondary",
+        "displayName": "error ink",
+        "tonalRamp": [
+          "oklch(15% 0.13051 28.00)",
+          "oklch(26.43% 0.13051 28.00)",
+          "oklch(37.86% 0.13051 28.00)",
+          "oklch(49.29% 0.13051 28.00)",
+          "oklch(60.71% 0.13051 28.00)",
+          "oklch(72.14% 0.13051 28.00)",
+          "oklch(83.57% 0.13051 28.00)",
+          "oklch(95% 0.13051 28.00)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "headline",
+        "purpose": "Observed headline role; see DESIGN.md hierarchy."
+      },
+      "title": {
+        "displayName": "title",
+        "purpose": "Observed title role; see DESIGN.md hierarchy."
+      },
+      "item-title": {
+        "displayName": "item title",
+        "purpose": "Observed item title role; see DESIGN.md hierarchy."
+      },
+      "body": {
+        "displayName": "body",
+        "purpose": "Observed body role; see DESIGN.md hierarchy."
+      },
+      "label": {
+        "displayName": "label",
+        "purpose": "Observed label role; see DESIGN.md hierarchy."
+      },
+      "metadata": {
+        "displayName": "metadata",
+        "purpose": "Observed metadata role; see DESIGN.md hierarchy."
+      },
+      "money": {
+        "displayName": "money",
+        "purpose": "Observed money role; see DESIGN.md hierarchy."
+      }
+    },
+    "shadows": [
+      {
+        "name": "selected-split",
+        "value": "0 2px 4px #1e3b2910",
+        "purpose": "Selected split choice only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "field-border",
+        "value": "border-color 120ms",
+        "purpose": "Field hover boundary."
+      },
+      {
+        "name": "primary-fill",
+        "value": "background 150ms",
+        "purpose": "Primary action hover."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition: none !important; animation: none !important;",
+        "purpose": "Global under prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "stack",
+        "value": "760px"
+      },
+      {
+        "name": "narrow",
+        "value": "380px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "html": "<button class=\"ds-button-primary\">Save expense</button>",
+      "css": ".ds-button-primary{\n  background: var(--green);\n  color: white;\n  border: 0;\n  border-radius: 7px;\n  font-weight: 600;\n  padding: 12px 18px;\n  min-height: 46px;\n  transition: background 150ms;\nfont-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;}.ds-button-primary:focus-visible{outline:3px solid #4d9170;outline-offset:3px;}.ds-button-primary:disabled{cursor:not-allowed;opacity:.55;}.ds-button-primary:hover:not(:disabled){\n  background: #184c34;\n}",
+      "description": "Shipped action variant with keyboard focus and disabled state."
+    },
+    {
+      "name": "Text button",
+      "kind": "button",
+      "refersTo": "button-text",
+      "html": "<button class=\"ds-button-text\">Try again</button>",
+      "css": ".ds-button-text{\n  background: transparent;\n  border: 0;\n  color: var(--green);\n  text-decoration: underline;\n  text-underline-offset: 4px;\n  padding: 6px;\n  font-size: 12px;\n  min-height: 36px;\nfont-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;}.ds-button-text:focus-visible{outline:3px solid #4d9170;outline-offset:3px;}.ds-button-text:disabled{cursor:not-allowed;opacity:.55;}.ds-button-text:hover:not(:disabled){\n  color: #123c25;\n}",
+      "description": "Shipped action variant with keyboard focus and disabled state."
+    },
+    {
+      "name": "Danger button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "html": "<button class=\"ds-button-danger\">Confirm delete</button>",
+      "css": ".ds-button-danger{\n  border: 0;\n  background: var(--red);\n  border-radius: 6px;\n  color: white;\n  font-size: 12px;\n  padding: 9px 12px;\n  min-height: 38px;\nfont-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;}.ds-button-danger:focus-visible{outline:3px solid #4d9170;outline-offset:3px;}.ds-button-danger:disabled{cursor:not-allowed;opacity:.55;}",
+      "description": "Shipped action variant with keyboard focus and disabled state."
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "refersTo": "input",
+      "html": "<label class=\"ds-field\">Description<input class=\"ds-input\" placeholder=\"What was it for?\"></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:7px;font:600 13px/1.5 Arial,Helvetica,sans-serif;color:var(--ink);}.ds-input{\n  width: 100%;\n  min-height: 45px;\n  padding: 10px 12px;\n  color: var(--ink);\n  border: 1px solid #c7d5cb;\n  border-radius: 7px;\n  background-color: var(--surface);\n  transition: border-color 120ms;\nfont-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;}.ds-input:hover:not(:disabled){border-color:#72927e;}.ds-input[aria-invalid=\"true\"]{border-color:var(--red);}.ds-input:disabled{cursor:not-allowed;background:#edf1ee;}.ds-input::placeholder{color:#6d7c72;opacity:1;}.ds-input:focus-visible{outline:3px solid #4d9170;outline-offset:3px;}",
+      "description": "Visible label with hover, invalid, disabled and focus states."
+    },
+    {
+      "name": "Work panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "html": "<section class=\"ds-panel\"><h2 class=\"ds-title\">Group balances</h2><p class=\"ds-copy\">Where everyone stands.</p></section>",
+      "css": ".ds-panel{\n  background: var(--surface);\n  border: 1px solid var(--line);\n  border-radius: var(--radius);\n  padding: 26px;\n  min-width: 0;\nfont-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;color:var(--ink);}.ds-title{margin:0;font-size:20px;font-weight:600;letter-spacing:-.02em;}.ds-copy{margin:5px 0 0;font-size:13px;color:var(--muted);}@media(max-width:760px){.ds-panel{padding:21px;}}@media(max-width:380px){.ds-panel{padding:17px;}}",
+      "description": "Flat work surface with responsive padding."
+    },
+    {
+      "name": "Expense count",
+      "kind": "chip",
+      "refersTo": "expense-count",
+      "html": "<span class=\"ds-expense-count\">3 expenses</span>",
+      "css": ".ds-expense-count{\n  border-radius: 6px;\n  font-size: 12px;\n  background: var(--green-light);\n  color: var(--green);\n  padding: 4px 9px;\n  white-space: nowrap;\nfont-family:Arial,Helvetica,sans-serif;line-height:1.5;}",
+      "description": "Informational count; no interaction states."
+    },
+    {
+      "name": "Selected split option",
+      "kind": "custom",
+      "refersTo": "split-option-selected",
+      "html": "<label class=\"ds-split-option\"><input type=\"radio\" checked name=\"ds-mode\">Split equally</label>",
+      "css": ".ds-split-option{\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  padding: 10px 8px;\n  border-radius: 5px;\n  color: var(--muted);\n  cursor: pointer;\n\n  color: var(--green);\n  background: white;\n  box-shadow: 0 2px 4px #1e3b2910;\ndisplay:flex;font:600 13px/1.5 Arial,Helvetica,sans-serif;}.ds-split-option input{accent-color:var(--green);width:16px;height:16px;flex-shrink:0;}.ds-split-option input:focus-visible{outline:3px solid #4d9170;outline-offset:3px;}",
+      "description": "Selected native radio label; no invented hover treatment."
+    }
+  ],
+  "narrative": {
+    "northStar": "Task-first expense workspace",
+    "overview": "SplitBill uses a task-first expense workspace: mist green ground, white work areas, deep green text and actions, and restrained borders. Compact hierarchy supports repeated form entry and financial comparison without imagery.\n\nVisible allocation, aligned numbers and explicit balance labels make precision legible. Plain-language feedback keeps loading, errors and safe retries within the working context.",
+    "keyCharacteristics": [
+      "Quiet green surfaces and bordered work areas.",
+      "Tabular money with explicit direction labels.",
+      "Visible allocation and safe retry states."
+    ],
+    "rules": [
+      {
+        "name": "The Direction Label Rule",
+        "body": "Pair balance color with the written state: To receive, To pay, or Settled up.",
+        "section": "colors"
+      },
+      {
+        "name": "The Aligned Money Rule",
+        "body": "Use tabular numerals for entered amounts, allocation values, balance amounts, expense totals and share details.",
+        "section": "typography"
+      },
+      {
+        "name": "The Quiet Surface Rule",
+        "body": "Use surface color and borders for resting panels; the selected split option alone carries the small selection shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do retain visible labels, keyboard focus and plain-language status messages.",
+      "Do show allocation before saving and distinguish money to receive from money to pay.",
+      "Do preserve entries and expose safe retry when the save result is uncertain."
+    ],
+    "donts": [
+      "Don't use balance color as the only indicator of money direction.",
+      "Don't enable exact-split saving before selected shares equal the total.",
+      "Don't turn the page heading into a decorative display treatment."
+    ]
+  }
+}

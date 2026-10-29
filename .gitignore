@@ -42,3 +42,9 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Browser test artifacts and local design workflow state
+test-results/
+playwright-report/
+.impeccable/questions/
+.impeccable/surface-body.md

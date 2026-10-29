@@ -1,7 +1,7 @@
 # SplitBill — Implementation Plan
 
 แผนจาก Developer-Take-Home-Test.pdf ใช้คู่กับ CHECKLIST.md
-สถานะ: Project setup, Database/seed, Backend API และ Business rules ครบแล้ว พร้อม pytest 70 กรณี ขั้นถัดไปคือ Frontend
+สถานะ: ขั้นตอน Project setup, Database/seed, Backend และ Frontend ครบแล้ว ผ่าน frontend unit/browser tests และ visual review ขั้นถัดไปคือ final review, fresh-clone verification และเตรียมส่ง
 ชื่อ repository ที่แนะนำ: splitbill-take-home
 กำหนดส่ง: ภายใน 7 วันปฏิทินนับจากได้รับโจทย์ (ต้องกรอกวันที่รับและวันส่งจริง)
 

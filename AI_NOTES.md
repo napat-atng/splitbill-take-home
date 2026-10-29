@@ -73,3 +73,23 @@ access dependencies, domain services และ SQL repositories
 ผลตรวจ: pytest 70 passed รวม required cases ทั้ง 6; ไม่มี test failures ในรอบ implementation นี้
 ตรวจเอกสาร setup และแก้คำสั่งคัดลอก frontend .env.local ที่ผิดรูปแบบจากการแทนข้อความในขั้นก่อน
 ไม่ติ๊ก Frontend หรือ fresh-clone verification ว่าเสร็จเพราะยังไม่ได้ทำ
+## Frontend
+
+ผู้ใช้ยืนยัน UI ภาษาอังกฤษและการจัดหน้าฟอร์มซ้าย/ยอดสุทธิขวา/รายจ่ายด้านล่าง
+Codex ใช้ impeccable กำหนด product/surface contract และ react-best-practices ตรวจ component structure
+หน้าใช้ React client components, typed API client, BigInt integer satang และแปลงเป็น strings ก่อนส่ง JSON
+ไม่มี AI-generated imagery; icons เป็น geometric SVG ในโค้ด
+
+เพิ่ม Node unit tests และ Playwright ผ่าน FastAPI/PostgreSQL จริงในฐานข้อมูลชั่วคราว
+จำลองกรณี POST บันทึกสำเร็จแต่ response หาย แล้วตรวจ retry ด้วย key เดิมและ expense มีรายการเดียว
+หยุดแจ้งผู้ใช้เมื่อพบ browser test failure ตามคำสั่งผู้ใช้ และได้รับอนุญาตให้แก้และทำต่อ
+สาเหตุ: selector getByRole("alert") ตรงทั้ง error ในฟอร์มและ Next.js route announcer
+อ่าน error-context เพื่อยืนยัน แล้ว scope locator ด้วย region Add an expense ก่อนเลือก alert
+ไม่ได้แก้ application เพื่อหลบ failure และไม่ได้ลบ accessibility announcer ของ framework
+
+ผลตรวจ: ESLint, TypeScript, production build ผ่าน; money unit tests 4 passed;
+browser tests ทั้ง desktop/mobile 8 passed; backend Ruff ผ่าน (Backend suite 70 passed จากขั้นก่อน)
+ตรวจ screenshots desktop/mobile และ independent impeccable finish review ได้ disposition: ship ไม่มี material fixes
+Detector รันหนึ่งครั้ง พบเพียง overused-font ที่ Arial; คงไว้ตามข้อยกเว้น Operate ที่อนุญาต system UI typography
+ก่อน commit ตรวจ diff, ignore artifacts/secrets และอัปเดต README/PLAN/CHECKLIST ตามผลจริง
+Frontend ยังไม่เก็บ pending request ข้าม refresh/ปิดแท็บ; บันทึกข้อจำกัดนี้ใน README

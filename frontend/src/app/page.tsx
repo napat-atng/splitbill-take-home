@@ -1,7 +1,5 @@
+import { SplitBill } from "@/components/splitbill";
+
 export default function Home() {
-  return (
-    <main>
-      <div>Hello world!</div>
-    </main>
-  );
+  return <SplitBill />;
 }

@@ -1,17 +1,17 @@
-﻿# SplitBill
+# SplitBill
 
 แอปหารค่าใช้จ่ายในกลุ่ม — FastAPI + Next.js + PostgreSQL 16
 
 ## สถานะ
 
-Project setup, Database/seed, Backend API และ Business rules เสร็จแล้ว
-เทสต์ backend รวม PostgreSQL จริงผ่าน 70 กรณี; Frontend ยังเป็น Next.js scaffold
+Project setup, Database/seed, Backend API, Business rules และ Frontend เสร็จแล้ว
+Backend ผ่าน 70 กรณีจากขั้นก่อน; Frontend unit tests 4 กรณีและ browser tests 8 กรณีผ่าน รวม desktop/mobile
 ติดตามงานที่เหลือใน PLAN.md และ CHECKLIST.md
 
 ## Prerequisites
 
 - Python 3.12+ และ uv (backend เลือก Python 3.12 ผ่าน .python-version)
-- Node.js 20.9+ และ npm (ตรวจด้วย Node.js 24)
+- Node.js 24+ และ npm สำหรับ frontend รวม unit test runner (ตรวจด้วย Node.js 24)
 - Docker Desktop ที่เปิด engine แล้ว สำหรับ PostgreSQL 16
 - Windows PowerShell: ใช้ npm.cmd/npx.cmd หาก execution policy บล็อก npm.ps1
 
@@ -90,7 +90,7 @@ Expense response มี id, group_id, description, paid_by, amount, created_at, 
 
 ผล balances สำหรับตัวอย่าง equal คือ alice +666.66, bob -333.33, carol -333.33
 API คืนเงินเป็น decimal string ไม่มี comma และมีทศนิยม 2 ตำแหน่งเสมอ
-รูปแบบตัวเลขไทยและ live preview จะทำใน Frontend
+Frontend แสดงรูปแบบตัวเลขไทยและ live preview ตามกติกาเดียวกันกับ Backend
 
 ## Business rules และเหตุผลการออกแบบ
 
@@ -190,14 +190,55 @@ npm.cmd run dev
 
 เปิด http://localhost:3000
 NEXT_PUBLIC_API_BASE_URL เป็น URL สาธารณะของ API ห้ามใส่ secrets ในตัวแปร NEXT_PUBLIC_*
-หน้าเริ่มต้นยังไม่ได้เรียก API; จะเชื่อมในขั้นตอน frontend
+หน้าจอเป็นภาษาอังกฤษ: ฟอร์มเพิ่มรายจ่ายด้านซ้าย ยอดสุทธิด้านขวา และรายการรายจ่ายด้านล่าง
+บนมือถือเรียงเป็นคอลัมน์เดียว เลือก identity และเฉพาะกลุ่มที่มีสิทธิ์ แล้วเลือก payer และ equal/exact
+ดู allocation ก่อนบันทึก กดดูรายละเอียดส่วนแบ่งในแต่ละรายการ และลบได้เฉพาะ payer
+การลบมีปุ่มยืนยันในรายการ ไม่เปิด modal ที่ขัดจังหวะการทำงาน
 
 ```powershell
 # จาก frontend/
+npm.cmd test
 npm.cmd run lint
 npm.cmd run typecheck
 npm.cmd run build
 ```
+
+### Money preview และ safe retry
+
+- src/lib/money.ts แปลง string เป็น BigInt หน่วยสตางค์ก่อนคำนวณทั้งหมด ไม่ใช้ Number คำนวณเงิน
+- Equal ใช้หารจำนวนเต็มและเศษเหมือน Backend ส่งสมาชิกตาม selection order จึงแจกเศษตรงกัน
+- Exact รวมยอดแบบจำนวนเต็ม แสดงยอดยังไม่จัดสรร/เกิน และ disable Save จนยอดรวมตรง
+- ค่าใน JSON แปลงกลับเป็น decimal strings ก่อนส่งเสมอ; display จัดกลุ่มหลักพันเองโดยไม่แปลงเป็น float
+- ตัวอย่าง 100.00 หาร 3 = 33.34/33.33/33.33 และ 0.10 + 0.20 = 0.30
+- สร้าง idempotency key ต่อรายการใหม่ หากเครือข่าย/5xx ทำให้ไม่รู้ผล จะล็อกข้อมูลและ user/group
+  เพื่อ retry ด้วย payload และ key เดิม; 4xx แสดง error พร้อมคงฟอร์มให้แก้ไขได้
+- กลุ่มที่เปลี่ยนจะสร้าง workspace ใหม่และ abort reads เก่า จึงไม่แสดงข้อมูลจาก scope ก่อนหน้า
+- หลังเพิ่ม/ลบ จะโหลด balances/list ใหม่ และซ่อนยอดเดิมระหว่างอัปเดต
+
+### Browser end-to-end tests
+
+เปิด PostgreSQL ตามด้านบน ติดตั้ง frontend dependencies และ Chromium ครั้งแรก:
+
+```powershell
+# จาก frontend/
+npm.cmd ci
+npx.cmd playwright install chromium
+# จาก backend/
+uv run python -m scripts.test_frontend
+```
+
+Runner สร้าง PostgreSQL database ชั่วคราว อัปเดต migrations/seed แล้วเปิด test API บน 8001
+และ Next.js บน 3001 ก่อนรัน Playwright ทั้ง desktop (1440px) และ mobile (390px)
+ทั้งสอง port ต้องว่าง; database และ test servers ถูก cleanup หลังจบ ไม่แก้ข้อมูลพัฒนา
+ไม่ต้องรัน npm run dev หรือ API test server เอง และไม่ควรชี้ browser tests ไปยัง database งานจริง
+
+ครอบคลุม equal/exact preview, การบันทึกและยอดจริง, payer-only deletion, ข้อผิดพลาดจาก API,
+การเปลี่ยนผู้ใช้โดยไม่แสดงข้อมูลค้าง และคำตอบหายหลังบันทึกซึ่ง retry ต้องมีเพียงหนึ่ง expense
+ภาพหลักอยู่ frontend/test-results/screenshots/desktop.png และ mobile.png; artifacts ไม่เข้า Git
+
+ผลตรวจล่าสุด: unit tests 4 passed, browser tests 8 passed, ESLint/TypeScript/build และ Ruff ผ่าน
+รีวิวภาพหน้าจอแยกจากผู้เขียนได้ disposition: ship; detector พบเพียงข้อเสนอเรื่อง system font
+ซึ่งเลือกใช้โดยตั้งใจสำหรับหน้าจอ Operate ตามขอบเขต take-home
 
 ## โครงสร้าง
 
@@ -206,15 +247,15 @@ npm.cmd run build
 - backend/app/repositories: SQL และ persistence; core: configuration, sessions และ errors
 - backend/app/schemas.py: request/response schemas แยกจาก table models
 - backend/tests: unit, schema/migration/seed และ API integration tests
-- frontend/src/app: Next.js App Router + TypeScript + Tailwind CSS
+- frontend/src/app: Next.js App Router + Tailwind; components: หน้าจอ/ฟอร์ม/workspace; lib: typed API client และ money helpers
 - เก็บ uv.lock และ package-lock.json ใน Git เพื่อให้ติดตั้ง dependencies ซ้ำได้
 - .env, dependencies, build outputs และ PDF โจทย์ไม่เข้า Git
 
 ## ข้อจำกัดและขั้นตอนถัดไป
 
-Frontend ยังไม่มีฟอร์ม, live preview, error UI หรือการเชื่อม API
+Frontend หลักครบแล้ว; pending write/key เก็บในหน่วยความจำ ไม่กู้ข้ามการ refresh หรือปิดแท็บระหว่างส่ง
 ยังไม่ได้ตรวจ fresh clone ทั้งระบบ และยังไม่ทำ optional settle-up/payments/API containerisation
-สมมติฐานของ Backend อธิบายไว้ด้านบน; แนวทาง Frontend อยู่ใน PLAN.md และต้องตรวจว่าตรงกับ Backend
+ต้องตรวจเอกสาร/เวลาที่ใช้และสิทธิ์ repository ก่อนส่ง ผู้สมัครต้องอ่านโค้ดและยืนยันว่าอธิบายได้ทั้งหมด
 
 ## เวลาที่ใช้
 
