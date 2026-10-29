@@ -1,7 +1,7 @@
 # SplitBill — Checklist
 
 ใช้คู่กับ PLAN.md ติ๊ก [x] เมื่อทำเสร็จและตรวจแล้วเท่านั้น
-อัปเดต: Project setup และ Database/seed ครบแล้ว; PostgreSQL integration tests รวม unit tests 29 กรณีผ่าน, Ruff และ Alembic schema drift check ผ่าน ขั้นถัดไปคือกติกาเงินส่วนที่เหลือและ Backend API
+อัปเดต: Backend API และ Business rules ครบแล้ว; pytest 70 กรณีผ่าน รวม required tests, PostgreSQL จริง และ concurrent API requests ขั้นถัดไปคือ Frontend
 
 วันที่ได้รับโจทย์: __________ | กำหนดส่ง (7 วันปฏิทิน): __________
 
@@ -31,52 +31,52 @@
 
 ## 3. Backend API
 
-- [ ] ใช้ X-User ระบุผู้ใช้ พร้อมจัดการ header หาย/ผู้ใช้ไม่พบ
-- [ ] GET /groups แสดงเฉพาะกลุ่มของผู้ขอ
-- [ ] GET /groups/{group_id} แสดงกลุ่มพร้อมสมาชิก
-- [ ] POST /groups/{group_id}/expenses รองรับ equal และ exact
-- [ ] GET /groups/{group_id}/expenses เรียงใหม่ไปเก่า
-- [ ] DELETE /groups/{group_id}/expenses/{expense_id} เป็น soft delete
-- [ ] GET /groups/{group_id}/balances คืนยอดสุทธิสมาชิกทุกคน
-- [ ] JSON errors รูปแบบสม่ำเสมอและ HTTP status เหมาะสม
+- [x] ใช้ X-User ระบุผู้ใช้ พร้อมจัดการ header หาย/ผู้ใช้ไม่พบ
+- [x] GET /groups แสดงเฉพาะกลุ่มของผู้ขอ
+- [x] GET /groups/{group_id} แสดงกลุ่มพร้อมสมาชิก
+- [x] POST /groups/{group_id}/expenses รองรับ equal และ exact
+- [x] GET /groups/{group_id}/expenses เรียงใหม่ไปเก่า
+- [x] DELETE /groups/{group_id}/expenses/{expense_id} เป็น soft delete
+- [x] GET /groups/{group_id}/balances คืนยอดสุทธิสมาชิกทุกคน
+- [x] JSON errors รูปแบบสม่ำเสมอและ HTTP status เหมาะสม
 
 ## 4. Business rules
 
-- [ ] รับ/ส่งเงินเป็น string และ Python ใช้ Decimal ไม่ใช้ float คำนวณเงิน
-- [ ] Reject expense amount ที่เป็นศูนย์ ติดลบ หรือเกิน 2 ตำแหน่ง
-- [ ] ตรวจยอดเกินขนาด NUMERIC(12,2) โดยไม่ปล่อยให้เป็น server error
+- [x] รับ/ส่งเงินเป็น string และ Python ใช้ Decimal ไม่ใช้ float คำนวณเงิน
+- [x] Reject expense amount ที่เป็นศูนย์ ติดลบ หรือเกิน 2 ตำแหน่ง
+- [x] ตรวจยอดเกินขนาด NUMERIC(12,2) โดยไม่ปล่อยให้เป็น server error
 - [x] Equal split แจกเศษทีละสตางค์ตามลำดับสมาชิกใน request
-- [ ] Exact shares รวมตรง amount ถึงสตางค์ มิฉะนั้น error ชัดเจน
-- [ ] Payer และผู้ร่วม split ทุกคนเป็นสมาชิกกลุ่ม
-- [ ] ตรวจ split ว่าง สมาชิกซ้ำ และ share ติดลบ
-- [ ] เฉพาะสมาชิกอ่านและเขียนกลุ่มได้
-- [ ] Balance ค่าบวกคือเงินที่สมาชิกต้องได้รับ และรวมทั้งกลุ่มเท่ากับ 0.00
-- [ ] Key เดิมในกลุ่มเดิมคืน expense แรกโดยไม่สร้างซ้ำ
-- [ ] Idempotency รับประกันเมื่อส่งคำขอพร้อมกันด้วย transaction/constraint
-- [ ] ไม่มี endpoint แก้ไข expense
-- [ ] ลบได้เฉพาะ payer และ record ยังอยู่ในฐานข้อมูล
-- [ ] Expense ที่ลบไม่รวมใน balances
+- [x] Exact shares รวมตรง amount ถึงสตางค์ มิฉะนั้น error ชัดเจน
+- [x] Payer และผู้ร่วม split ทุกคนเป็นสมาชิกกลุ่ม
+- [x] ตรวจ split ว่าง สมาชิกซ้ำ และ share ติดลบ
+- [x] เฉพาะสมาชิกอ่านและเขียนกลุ่มได้
+- [x] Balance ค่าบวกคือเงินที่สมาชิกต้องได้รับ และรวมทั้งกลุ่มเท่ากับ 0.00
+- [x] Key เดิมในกลุ่มเดิมคืน expense แรกโดยไม่สร้างซ้ำ
+- [x] Idempotency รับประกันเมื่อส่งคำขอพร้อมกันด้วย transaction/constraint
+- [x] ไม่มี endpoint แก้ไข expense
+- [x] ลบได้เฉพาะ payer และ record ยังอยู่ในฐานข้อมูล
+- [x] Expense ที่ลบไม่รวมใน balances
 
 ## 5. Required pytest — รันด้วยคำสั่งเดียว
 
-- [ ] 100.00 หาร 3 ได้ 33.34, 33.33, 33.33 และ balances รวม 0.00
-- [ ] Exact split รวมไม่ตรง amount ถูกปฏิเสธ
-- [ ] Amount 10.005 ถูกปฏิเสธ
-- [ ] ส่ง Idempotency-Key ซ้ำแล้วมี expense เดียว
-- [ ] Alice อ่านและเขียน group 2 ไม่ได้
-- [ ] เฉพาะ payer ลบ expense ได้
+- [x] 100.00 หาร 3 ได้ 33.34, 33.33, 33.33 และ balances รวม 0.00
+- [x] Exact split รวมไม่ตรง amount ถูกปฏิเสธ
+- [x] Amount 10.005 ถูกปฏิเสธ
+- [x] ส่ง Idempotency-Key ซ้ำแล้วมี expense เดียว
+- [x] Alice อ่านและเขียน group 2 ไม่ได้
+- [x] เฉพาะ payer ลบ expense ได้
 
 ## 6. Additional verification
 
-- [ ] Concurrent requests ใช้ key เดียวกัน ได้ expense เดียวและผลรายการเดิม
-- [ ] Key เดียวกันคนละกลุ่มไม่ชนกัน
-- [ ] ผู้ไม่มีสิทธิ์ใช้ key เดิมแล้วไม่เห็นข้อมูลรายการ
-- [ ] Soft delete เก็บ record แต่ยอดคำนวณกลับถูกต้อง
-- [ ] Payer/สมาชิกนอกกลุ่มถูกปฏิเสธ
-- [ ] Reject amount <= 0, split ว่าง, สมาชิกซ้ำ และ share ติดลบ
-- [ ] แจกเศษตามลำดับที่ส่งจริง รวมกรณียอดน้อยกว่าจำนวนสมาชิกเป็นสตางค์
-- [ ] ตัวอย่าง 1,000.00 ใน PDF ได้ shares 333.34/333.33/333.33 และ balances +666.66/-333.33/-333.33
-- [ ] Integration tests ตรวจพฤติกรรม PostgreSQL จริง โดยเฉพาะ concurrency
+- [x] Concurrent requests ใช้ key เดียวกัน ได้ expense เดียวและผลรายการเดิม
+- [x] Key เดียวกันคนละกลุ่มไม่ชนกัน
+- [x] ผู้ไม่มีสิทธิ์ใช้ key เดิมแล้วไม่เห็นข้อมูลรายการ
+- [x] Soft delete เก็บ record แต่ยอดคำนวณกลับถูกต้อง
+- [x] Payer/สมาชิกนอกกลุ่มถูกปฏิเสธ
+- [x] Reject amount <= 0, split ว่าง, สมาชิกซ้ำ และ share ติดลบ
+- [x] แจกเศษตามลำดับที่ส่งจริง รวมกรณียอดน้อยกว่าจำนวนสมาชิกเป็นสตางค์
+- [x] ตัวอย่าง 1,000.00 ใน PDF ได้ shares 333.34/333.33/333.33 และ balances +666.66/-333.33/-333.33
+- [x] Integration tests ตรวจพฤติกรรม PostgreSQL จริง โดยเฉพาะ concurrency
 
 ## 7. Frontend
 
@@ -99,12 +99,12 @@
 ## 8. README.md
 
 - [ ] วิธี setup จาก fresh clone รวม prerequisites, env, migrate, seed และ start ทั้งสองฝั่ง
-- [ ] คำสั่งเดียวสำหรับ pytest และคำสั่ง lint/build ที่รันได้จริง
-- [ ] อธิบาย architecture และการแยกหน้าที่
-- [ ] อธิบายการเลือก 403/404 พร้อมเหตุผล
+- [x] คำสั่งเดียวสำหรับ pytest และคำสั่ง lint/build ที่รันได้จริง
+- [x] อธิบาย architecture และการแยกหน้าที่
+- [x] อธิบายการเลือก 403/404 พร้อมเหตุผล
 - [ ] อธิบาย money storage, Decimal, integer satang และรูปแบบ API
 - [ ] อธิบายการแจกเศษสตางค์และ preview ให้ตรง backend
-- [ ] อธิบาย idempotency รวม concurrent requests
+- [x] อธิบาย idempotency รวม concurrent requests
 - [ ] บันทึกความกำกวมและสมมติฐานที่เลือกใช้ทั้งหมด
 - [ ] ระบุ known limitations, next steps และเวลาที่ใช้โดยประมาณ
 

@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.core.database import SessionDep
 from app.repositories.health import check_connection
+from app.schemas import ErrorRead
 
 router = APIRouter(tags=["health"])
 
@@ -20,7 +21,7 @@ def health() -> HealthResponse:
     return HealthResponse()
 
 
-@router.get("/ready", responses={503: {"description": "Database unavailable"}})
+@router.get("/ready", responses={503: {"description": "Database unavailable", "model": ErrorRead}})
 def readiness(session: SessionDep) -> HealthResponse:
     try:
         check_connection(session)

@@ -1,7 +1,7 @@
 # SplitBill — Implementation Plan
 
 แผนจาก Developer-Take-Home-Test.pdf ใช้คู่กับ CHECKLIST.md
-สถานะ: Project setup และ Database/seed เสร็จแล้ว รวม migrations, constraints, seed ซ้ำและ integration tests; equal split service มีแล้ว ขั้นถัดไปคือ exact split, balances และ Backend API
+สถานะ: Project setup, Database/seed, Backend API และ Business rules ครบแล้ว พร้อม pytest 70 กรณี ขั้นถัดไปคือ Frontend
 ชื่อ repository ที่แนะนำ: splitbill-take-home
 กำหนดส่ง: ภายใน 7 วันปฏิทินนับจากได้รับโจทย์ (ต้องกรอกวันที่รับและวันส่งจริง)
 

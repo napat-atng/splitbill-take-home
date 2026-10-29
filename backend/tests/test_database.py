@@ -1,59 +1,21 @@
-"""Opt-in PostgreSQL tests, always isolated in a newly created temporary database."""
+"""PostgreSQL tests, always isolated in a newly created temporary database."""
 
-import os
 from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal
-from pathlib import Path
 from threading import Barrier
-from uuid import uuid4
 
 import pytest
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import Engine, inspect, text
-from sqlalchemy.engine import make_url
+from sqlalchemy import Engine, inspect
 from sqlalchemy.exc import IntegrityError
-from sqlmodel import Session, create_engine, select
+from sqlmodel import Session, select
 
-from app.core.config import get_settings
 from app.models import Expense, ExpenseShare, Group, Membership, User
 from app.repositories.seed import seed_data
 
 pytestmark = pytest.mark.database
-
-
-@pytest.fixture(scope="module")
-def database() -> Iterator[tuple[Engine, Config]]:
-    if os.environ.get("RUN_DB_TESTS") != "1":
-        pytest.skip("Set RUN_DB_TESTS=1 to run isolated PostgreSQL migration/seed tests")
-    original_url = make_url(get_settings().database_url)
-    name = "splitbill_test_" + uuid4().hex
-    admin = create_engine(
-        original_url.set(database="postgres"),
-        isolation_level="AUTOCOMMIT",
-        connect_args={"connect_timeout": 3},
-    )
-    with admin.connect() as connection:
-        connection.execute(text(f'CREATE DATABASE "{name}"'))
-    test_url = original_url.set(database=name)
-    engine = create_engine(test_url, connect_args={"connect_timeout": 3})
-    config = Config(str(Path(__file__).resolve().parents[1] / "alembic.ini"))
-    try:
-        with pytest.MonkeyPatch.context() as patch:
-            patch.setenv("DATABASE_URL", test_url.render_as_string(hide_password=False))
-            get_settings.cache_clear()
-            command.upgrade(config, "head")
-            command.upgrade(config, "head")
-            with Session(engine) as session, session.begin():
-                seed_data(session)
-            yield engine, config
-    finally:
-        get_settings.cache_clear()
-        engine.dispose()
-        with admin.connect() as connection:
-            connection.execute(text(f'DROP DATABASE "{name}" WITH (FORCE)'))
-        admin.dispose()
 
 
 @pytest.fixture

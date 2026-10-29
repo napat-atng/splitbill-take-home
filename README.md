@@ -1,105 +1,182 @@
-# SplitBill
+﻿# SplitBill
 
 แอปหารค่าใช้จ่ายในกลุ่ม — FastAPI + Next.js + PostgreSQL 16
 
 ## สถานะ
 
-ขั้นตอนที่ 1: ตั้งโปรเจกต์ครบ พร้อม PostgreSQL 16, API `/health` และ `/ready`, equal split service และหน้าเริ่มต้นของ Next.js
-Database และ seed เสร็จแล้ว: มี schema 5 ตาราง, Alembic migration และ seed แบบรันซ้ำได้ ยังไม่มี expense API หรือ UI ใช้งานจริง ดู PLAN.md และ CHECKLIST.md
+Project setup, Database/seed, Backend API และ Business rules เสร็จแล้ว
+เทสต์ backend รวม PostgreSQL จริงผ่าน 70 กรณี; Frontend ยังเป็น Next.js scaffold
+ติดตามงานที่เหลือใน PLAN.md และ CHECKLIST.md
 
 ## Prerequisites
 
 - Python 3.12+ และ uv (backend เลือก Python 3.12 ผ่าน .python-version)
 - Node.js 20.9+ และ npm (ตรวจด้วย Node.js 24)
-- Docker Desktop ที่เปิด engine แล้ว สำหรับ PostgreSQL 16; unit tests ไม่ต้องใช้ database
+- Docker Desktop ที่เปิด engine แล้ว สำหรับ PostgreSQL 16
 - Windows PowerShell: ใช้ npm.cmd/npx.cmd หาก execution policy บล็อก npm.ps1
 
-## PostgreSQL 16 (local development)
+## ติดตั้งฐานข้อมูลและ Backend
 
-จาก root repository คัดลอก backend/.env.example เป็น backend/.env หากยังไม่มี
-ตั้ง POSTGRES_PASSWORD และส่วนรหัสผ่านใน DATABASE_URL ให้ตรงกันก่อนเปิดฐานข้อมูล
-ใช้รหัสผ่านสำหรับ local development เท่านั้น ห้าม commit .env
+จาก root repository คัดลอกตัวอย่าง config หากยังไม่มี:
 
 ```powershell
-docker compose --env-file backend/.env up -d --wait db
-docker compose --env-file backend/.env exec db postgres --version
+if (!(Test-Path backend/.env)) { Copy-Item backend/.env.example backend/.env }
 ```
 
-Database เปิดเฉพาะ localhost:55432 และเก็บข้อมูลใน named volume
-หยุดโดยใช้ `docker compose --env-file backend/.env stop db` ซึ่งยังคงข้อมูลไว้
-Compose ชุดนี้เปิดเฉพาะฐานข้อมูล; optional containerisation ของ API ยังไม่ได้ทำ
-ไม่มีการสร้าง schema อัตโนมัติที่ API startup ให้รัน Alembic ตามด้านล่าง
-
-## Backend
-
-จาก root repository:
+ตั้ง POSTGRES_PASSWORD และรหัสผ่านใน DATABASE_URL ของ backend/.env ให้ตรงกัน
+ใช้รหัสผ่านสำหรับ local development เท่านั้น ห้าม commit .env
+ตัวอย่าง config ใช้ port 55432 บน localhost; CORS_ORIGINS เป็น JSON array ของ frontend origins
 
 ```powershell
+# จาก root repository
+docker compose --env-file backend/.env up -d --wait db
 cd backend
 uv sync --locked
-# คัดลอกเฉพาะเมื่อยังไม่มี .env (ห้ามทับ config เดิม)
-if (!(Test-Path .env)) { Copy-Item .env.example .env }
 uv run alembic upgrade head
 uv run python -m app.seed
 uv run fastapi dev
 ```
 
-แก้ DATABASE_URL ใน backend/.env ให้ตรงกับ PostgreSQL ที่ตั้งไว้
-CORS_ORIGINS เป็น JSON array ของ frontend origins
-API: http://localhost:8000/health — ตรวจ process เท่านั้น ไม่ตรวจ database
-Readiness: http://localhost:8000/ready — ตรวจ database connection; ไม่พร้อมคืน 503
-OpenAPI: http://localhost:8000/docs
+- API: http://localhost:8000
+- OpenAPI และ interactive examples: http://localhost:8000/docs
+- GET /health ตรวจ process; GET /ready ตรวจ database (ไม่พร้อมคืน 503)
+- Compose เปิดเฉพาะฐานข้อมูลบน 127.0.0.1:55432 และเก็บข้อมูลใน named volume
+- หยุด database จาก root ด้วย `docker compose --env-file backend/.env stop db` โดยยังคงข้อมูลไว้
+- ไม่สร้าง schema อัตโนมัติที่ API startup; ใช้ Alembic เท่านั้น
 
-```powershell
-# จาก backend/
-uv run pytest
-uv run ruff check .
-uv run ruff format --check .
+## Backend API
+
+ส่ง `X-User: alice` (หรือ bob, carol, dan) ทุก endpoint ในตาราง
+ยังไม่มี full authentication ตามขอบเขตโจทย์
+
+| Method | Endpoint | ผลลัพธ์ |
+| --- | --- | --- |
+| GET | /groups | array ของ {id, name} เฉพาะกลุ่มของผู้ขอ |
+| GET | /groups/{group_id} | {id, name, members} |
+| POST | /groups/{group_id}/expenses | Expense; 201 เมื่อสร้าง และ 200 เมื่อ replay |
+| GET | /groups/{group_id}/expenses | array ของ Expense ที่ยังไม่ลบ เรียง created_at และ id จากใหม่ไปเก่า |
+| DELETE | /groups/{group_id}/expenses/{expense_id} | 204 เฉพาะ payer; soft delete |
+| GET | /groups/{group_id}/balances | {group_id, balances: {username: "amount"}} |
+
+POST ต้องส่ง Idempotency-Key ที่ไม่ว่าง ความยาวไม่เกิน 255 ตัวอักษร
+ตัวอย่าง request ใน OpenAPI หรือ HTTP client:
+
+```http
+POST /groups/1/expenses
+Content-Type: application/json
+X-User: alice
+Idempotency-Key: dinner-0001
+
+{
+  "description": "Dinner at the night market",
+  "paid_by": "alice",
+  "amount": "1000.00",
+  "split": {"type": "equal", "members": ["alice", "bob", "carol"]}
+}
 ```
+
+Expense response มี id, group_id, description, paid_by, amount, created_at, is_deleted
+และ split รูปแบบเดียวกันทั้ง equal/exact:
+
+```json
+{"type": "equal", "shares": {"alice": "333.34", "bob": "333.33", "carol": "333.33"}}
+```
+
+สำหรับ exact ให้เปลี่ยน request.split เป็น:
+
+```json
+{"type": "exact", "shares": {"alice": "500.00", "bob": "300.00", "carol": "200.00"}}
+```
+
+ผล balances สำหรับตัวอย่าง equal คือ alice +666.66, bob -333.33, carol -333.33
+API คืนเงินเป็น decimal string ไม่มี comma และมีทศนิยม 2 ตำแหน่งเสมอ
+รูปแบบตัวเลขไทยและ live preview จะทำใน Frontend
+
+## Business rules และเหตุผลการออกแบบ
+
+- เงิน: Python Decimal และ PostgreSQL NUMERIC(12,2); ไม่ใช้ float คำนวณเงิน
+- Input เงินต้องเป็น string ของเลขฐานสิบธรรมดา เช่น "1000", "1000.0", "1000.00"
+  ไม่รับ numeric JSON, ค่าติดลบ, exponent, NaN, Infinity หรือทศนิยมเกิน 2 ตำแหน่ง
+- Expense ต้องมากกว่า 0 และไม่เกิน 9999999999.99; exact share เป็น 0.00 ได้
+- Equal split ใช้จำนวนเต็มสตางค์และ divmod แจกเศษทีละสตางค์ตามลำดับสมาชิกใน request
+- Exact shares ต้องรวมตรง amount; ไม่ปัดเศษ input เพื่อทำให้ยอดผ่าน
+- ผู้จ่ายและทุกคนใน split ต้องเป็นสมาชิกกลุ่ม; split ต้องไม่ว่างและสมาชิกห้ามซ้ำ
+- ผู้ขออาจบันทึกแทน payer คนอื่นในกลุ่มได้ เพราะโจทย์แยก X-User กับ paid_by
+  payer ไม่จำเป็นต้องอยู่ในรายชื่อคนแบ่ง แต่ต้องอยู่ในกลุ่ม
+- Balance = เงินที่จ่าย - ส่วนที่รับผิดชอบ; ค่าบวกคือต้องได้รับเงิน รวมทุกคนต้องเป็น 0.00
+  คืนสมาชิกที่ไม่มียอดด้วยค่า 0.00 และรวมทั้งสองด้านใน SQL statement เดียวเพื่อใช้ snapshot เดียวกัน
+- เลือก 403 สำหรับผู้ใช้ที่รู้จักแต่ไม่อยู่ในกลุ่ม เพื่อให้แสดงข้อผิดพลาดตรงสาเหตุ
+  กลุ่ม/รายจ่ายที่ไม่มีอยู่คืน 404; รายจ่ายต้องอยู่ใน group ที่ระบุใน path
+- X-User หายหรือไม่รู้จักคืน 401; input ผิดคืน 422
+- รายจ่ายแก้ไขไม่ได้ (ไม่มี PUT/PATCH); payer เท่านั้นลบได้
+  ลบซ้ำโดย payer คืน 204; เก็บ expense/shares ไว้ แต่ไม่รวมรายการที่ลบใน list/balances
+
+### Idempotency และ concurrency
+
+Unique (group_id, idempotency_key) บังคับที่ฐานข้อมูล รวมรายการ soft delete
+API ตรวจสิทธิ์สมาชิกก่อนค้นหารายการเดิม จึงใช้ key เพื่อข้ามสิทธิ์ไม่ได้
+สำหรับรายการใหม่ ใช้ INSERT ... ON CONFLICT DO NOTHING RETURNING และบันทึก shares ใน transaction เดียวกัน
+ถ้าอีก transaction ใช้ key ก่อน จะรอจน transaction นั้นจบ แล้ว SELECT รายการที่ commit แล้ว
+ทำงานภายใต้ PostgreSQL READ COMMITTED; ไม่มีการจับ exception แบบกว้างเพื่อเดาว่า key ชน
+
+Key เดิมในกลุ่มเดิมคืน expense แรกแม้ payload เปลี่ยน โดย request ยังต้องผ่าน schema validation
+ไม่ตรวจ business fields ใหม่เมื่อพบ key เดิม; กลุ่มต่างกันใช้ key เดียวกันได้
+หลัง soft delete การ replay คืน ID เดิมพร้อม is_deleted=true และไม่สร้าง expense ใหม่
+
+### รูปแบบ errors
+
+```json
+{"error": {"code": "invalid_split", "message": "The shares do not add up to the total", "details": []}}
+```
+
+Validation errors ใช้ code=validation_error พร้อม details ของ location/message/type
+ไม่คืน input ที่ผิด, exception context หรือรายละเอียด connection ของฐานข้อมูล
+SQL/database errors คืน 503 แบบไม่เปิดเผยข้อมูลภายใน
 
 ## Schema และ seed
 
 | Table | หน้าที่และข้อบังคับสำคัญ |
 | --- | --- |
-| users | username เป็น primary key ใช้ระบุ X-User ใน API ขั้นถัดไป |
+| users | username เป็น primary key |
 | groups | integer identity ID และชื่อกลุ่ม |
-| memberships | primary key (group_id, username); สมาชิกซ้ำในกลุ่มไม่ได้ |
+| memberships | primary key (group_id, username) |
 | expenses | NUMERIC(12,2), payer membership FK, created_at แบบ timezone, is_deleted |
 | expense_shares | NUMERIC(12,2), member membership FK, expense/group FK และ position |
 
-- จำนวนเงินใช้ Decimal; expense ต้องมากกว่า 0 ส่วน share อนุญาต 0 แต่ห้ามติดลบ
-- Unique (group_id, idempotency_key) ป้องกันการ insert ซ้ำแม้เกิดพร้อมกัน รวมรายการ soft delete
-- API ขั้นถัดไปต้องจัดการ unique conflict ให้คืน expense เดิม; ตอนนี้ทดสอบเฉพาะข้อบังคับฐานข้อมูล
-- Foreign keys ป้องกัน payer/ผู้ร่วมแบ่งนอกกลุ่ม และ share ที่อ้าง expense คนละกลุ่ม
-- position เก็บลำดับสมาชิกที่ใช้แจกเศษ; unique ต่อ expense เพื่อไม่ให้ลำดับชนกัน
-- Index รองรับการหากลุ่มของผู้ใช้และรายจ่ายตาม group/created_at/id
-- Soft delete ใช้ is_deleted เก็บ record เดิม; การตัดออกจาก balances จะ implement ใน service/API
-- NUMERIC(12,2) อาจปัด input ที่ทศนิยมเกินเอง จึงต้อง validate ก่อนบันทึก; ห้ามใช้ฐานข้อมูลแทน input validation
-- ผลรวม shares เท่ากับ amount และ zero-sum balances จะตรวจใน business logic ขั้นถัดไป
+Foreign keys ป้องกันสมาชิกนอกกลุ่มและ shares ที่อ้าง expense คนละกลุ่ม
+position เก็บลำดับแจกเศษและ unique ต่อ expense
+Indexes รองรับกลุ่มของผู้ใช้, รายจ่ายตาม group/created_at/id และ shares ตามสมาชิก
+NUMERIC(12,2) อาจปัดเศษ input เอง จึงต้อง validate ที่ business layer ก่อนบันทึก
+ตรวจ schema drift จาก backend/ ด้วย `uv run alembic check`
 
 Seed: alice, bob, carol, dan; group 1 Chiang Mai trip (alice, bob, carol); group 2 Office lunch (bob, dan)
 `uv run python -m app.seed` ใช้ transaction, ON CONFLICT DO NOTHING และ advisory lock
-เพิ่มเฉพาะข้อมูลที่ขาด ไม่ลบรายจ่ายหรือทับชื่อกลุ่มเดิม; หาก ID ของ seed ชนกลุ่มชื่ออื่นจะ fail และ rollback
-ปรับ sequence ของ group ID ให้การสร้างกลุ่มใหม่ไม่ชน ID ที่ seed ไว้
+เพิ่มเฉพาะข้อมูลที่ขาด ไม่ลบรายจ่ายหรือทับชื่อกลุ่มเดิม; ID ชนกลุ่มชื่ออื่นจะ fail และ rollback
+ปรับ group identity sequence ไม่ให้สร้างกลุ่มใหม่ชน ID ที่ seed ไว้
+Downgrade ใช้เพื่อพัฒนา/ทดสอบเท่านั้น เพราะลบตารางและข้อมูลของ migration นั้น
 
-ตรวจว่า migrations ตรง models โดยใช้ `uv run alembic check` จาก backend/
-การ downgrade ใช้เพื่อพัฒนา/ทดสอบเท่านั้น เพราะลบตารางและข้อมูลใน migration นั้น
+## Tests และ code checks
 
-## PostgreSQL integration tests
-
-จาก backend/ หลังเปิด PostgreSQL แล้ว:
+หลังเปิด PostgreSQL และตั้ง backend/.env แล้ว จาก backend/ รัน suite ทั้งหมดด้วยคำสั่งเดียว:
 
 ```powershell
-$env:RUN_DB_TESTS="1"
 uv run pytest
-Remove-Item Env:RUN_DB_TESTS
 ```
 
-ใช้ DATABASE_URL จาก backend/.env เป็น connection สำหรับสร้างฐานข้อมูลชั่วคราวชื่อ splitbill_test_<random>
-บัญชีทดสอบต้องมีสิทธิ์ CREATE DATABASE และลบ database ที่ตนสร้าง (บัญชีใน local Compose มีสิทธิ์นี้)
-เทสต์ migrate จากฐานข้อมูลว่าง, upgrade ซ้ำ, seed ซ้ำ, constraints, concurrent insert และ downgrade/upgrade
-ข้อมูลทดสอบอยู่เฉพาะฐานข้อมูลชั่วคราวและลบทิ้งหลังจบ ไม่ downgrade หรือล้างฐานข้อมูลพัฒนา
-`uv run pytest` แบบไม่ตั้ง RUN_DB_TESTS จะรัน unit tests และ skip integration tests ชุดนี้
+รวม required API tests ทั้ง 6 กรณีและ integration tests โดยไม่ต้องตั้ง RUN_DB_TESTS
+ใช้ connection จาก DATABASE_URL เพื่อสร้าง database ชั่วคราวชื่อ splitbill_test_<random>
+บัญชีทดสอบต้องมีสิทธิ์ CREATE DATABASE และลบ database ที่ตนสร้าง (local Compose มีสิทธิ์นี้)
+เทสต์ migrate/seed/constraints และ HTTP API บน database ชั่วคราว แล้วลบทิ้งหลังจบ
+ไม่ downgrade หรือล้างข้อมูลของ database พัฒนา
+การตรวจ concurrent API บังคับ 4 requests ให้ไปถึงจุด insert พร้อมกันและตรวจว่าได้ expense เดียวกัน
+
+```powershell
+# รันเฉพาะ unit tests โดยไม่ใช้ PostgreSQL
+uv run pytest -m "not database"
+# ตรวจโค้ด
+uv run ruff check .
+uv run ruff format --check .
+```
 
 ## Frontend
 
@@ -107,8 +184,7 @@ Remove-Item Env:RUN_DB_TESTS
 # จาก root repository
 cd frontend
 npm.cmd ci
-# คัดลอกเฉพาะเมื่อยังไม่มี .env (ห้ามทับ config เดิม)
-if (!(Test-Path .env)) { Copy-Item .env.example .env }.local
+if (!(Test-Path .env.local)) { Copy-Item .env.example .env.local }
 npm.cmd run dev
 ```
 
@@ -123,22 +199,22 @@ npm.cmd run typecheck
 npm.cmd run build
 ```
 
-## โครงสร้างและแนวทาง
+## โครงสร้าง
 
-- backend/app/api: HTTP routes; core: configuration
-- backend/app/services: กติกาเงินแบบ pure functions; repositories: SQL สำหรับ database readiness
-- backend/tests: pytest; ตรวจ health/CORS, การหารพร้อมเศษ และ validation ของจำนวนเงิน
+- backend/app/api: routing, headers, user/group dependencies และ HTTP response status
+- backend/app/services: allocation, zero-sum balances และ expense operations
+- backend/app/repositories: SQL และ persistence; core: configuration, sessions และ errors
+- backend/app/schemas.py: request/response schemas แยกจาก table models
+- backend/tests: unit, schema/migration/seed และ API integration tests
 - frontend/src/app: Next.js App Router + TypeScript + Tailwind CSS
-- uv.lock และ package-lock.json: เก็บใน Git เพื่อให้ติดตั้ง dependencies ซ้ำได้
-- Config อยู่ใน environment variables และไฟล์ .env ที่ไม่เข้า Git
-- PDF โจทย์ถูก ignore เฉพาะไฟล์ Developer-Take-Home-Test.pdf ที่ root
+- เก็บ uv.lock และ package-lock.json ใน Git เพื่อให้ติดตั้ง dependencies ซ้ำได้
+- .env, dependencies, build outputs และ PDF โจทย์ไม่เข้า Git
 
 ## ข้อจำกัดและขั้นตอนถัดไป
 
-ทำ schema, migrations และ seed แล้ว; ขั้นถัดไปคือ exact split, balances และ API ตาม PLAN.md
-จากนั้นทำ API, frontend และ integration tests ตาม PLAN.md
-ตรวจ migration บนฐานข้อมูลว่างผ่าน integration tests แล้ว แต่ยังไม่ได้ตรวจ fresh clone ทั้งระบบ
-Design decisions ที่ยังไม่ implement อยู่ใน PLAN.md; จะอัปเดตส่วนนี้เมื่อพัฒนาและตรวจแล้ว
+Frontend ยังไม่มีฟอร์ม, live preview, error UI หรือการเชื่อม API
+ยังไม่ได้ตรวจ fresh clone ทั้งระบบ และยังไม่ทำ optional settle-up/payments/API containerisation
+สมมติฐานของ Backend อธิบายไว้ด้านบน; แนวทาง Frontend อยู่ใน PLAN.md และต้องตรวจว่าตรงกับ Backend
 
 ## เวลาที่ใช้
 

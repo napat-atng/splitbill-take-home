@@ -56,3 +56,20 @@ Ruff แจ้ง F821 และ migration ล้มด้วย NameError จ�
 แก้ข้อมูลทดสอบเป็น "other" (ยาว 5 ตัว) เพื่อทดสอบ CHECK constraint ตามเจตนาโดยตรง
 Integration tests ใช้ฐานข้อมูลชั่วคราวที่สร้างใหม่เองและ cleanup หลังจบ ไม่ล้างฐานข้อมูลพัฒนา
 ผลตรวจ Database/seed: pytest 29 passed รวม PostgreSQL จริง; Ruff check/format ผ่าน และ alembic check ไม่พบ schema drift
+
+## Backend API และ Business rules
+
+Codex ใช้สกิล fastapi และแนวทาง PostgreSQL ที่อ่านไว้ แยก public schemas, routing,
+access dependencies, domain services และ SQL repositories
+เพิ่ม exact allocation, zero-sum balances, membership access, soft delete และ idempotent creation
+ใช้ INSERT ON CONFLICT ตามเอกสาร SQLAlchemy/PostgreSQL พร้อม transaction ครอบ expense และ shares
+อ่านเอกสาร exception handlers ของ FastAPI เพื่อคืน JSON errors ที่ไม่เปิดเผย input/connection details
+
+เพิ่ม API tests บน database ชั่วคราว รวมคำขอ key ซ้ำ 4 คำขอที่บังคับให้ถึงจุด insert พร้อมกัน
+เพิ่ม tests ของยอดเงิน, exact shares, สิทธิ์อ่าน/เขียน, payer-only deletion และ soft-deleted replay
+เปลี่ยน `uv run pytest` ให้รัน PostgreSQL integration tests เป็นค่าเริ่มต้นเพื่อให้ required tests รันด้วยคำสั่งเดียว
+ส่วน unit-only ใช้ `uv run pytest -m "not database"`
+
+ผลตรวจ: pytest 70 passed รวม required cases ทั้ง 6; ไม่มี test failures ในรอบ implementation นี้
+ตรวจเอกสาร setup และแก้คำสั่งคัดลอก frontend .env.local ที่ผิดรูปแบบจากการแทนข้อความในขั้นก่อน
+ไม่ติ๊ก Frontend หรือ fresh-clone verification ว่าเสร็จเพราะยังไม่ได้ทำ
