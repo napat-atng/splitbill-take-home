@@ -1,7 +1,7 @@
-﻿# SplitBill — Implementation Plan
+# SplitBill — Implementation Plan
 
 แผนจาก Developer-Take-Home-Test.pdf ใช้คู่กับ CHECKLIST.md
-สถานะ: วางแผนแล้ว ยังไม่ได้เริ่ม implementation
+สถานะ: ขั้นตอนที่ 1 ตั้งโครงโปรเจกต์และเครื่องมือแล้ว (health/CORS tests, lint, typecheck และ build ผ่าน); ขั้นต่อไปคือฐานข้อมูลและกติกาเงิน
 ชื่อ repository ที่แนะนำ: splitbill-take-home
 กำหนดส่ง: ภายใน 7 วันปฏิทินนับจากได้รับโจทย์ (ต้องกรอกวันที่รับและวันส่งจริง)
 

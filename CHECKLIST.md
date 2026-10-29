@@ -1,19 +1,21 @@
-﻿# SplitBill — Checklist
+# SplitBill — Checklist
 
 ใช้คู่กับ PLAN.md ติ๊ก [x] เมื่อทำเสร็จและตรวจแล้วเท่านั้น
+อัปเดต: ขั้นตอนที่ 1 ตั้งโครงโปรเจกต์แล้ว ตรวจ health/CORS tests 2 กรณี, Ruff, ESLint, TypeScript และ build ผ่าน งานฐานข้อมูลและฟีเจอร์หลักยังไม่เริ่ม
+
 วันที่ได้รับโจทย์: __________ | กำหนดส่ง (7 วันปฏิทิน): __________
 
 ## 1. Project setup
 
-- [ ] สร้าง Git และ GitHub repository: splitbill-take-home
-- [ ] สร้าง backend/ และ frontend/
+- [x] สร้าง Git และ GitHub repository: splitbill-take-home
+- [x] สร้าง backend/ และ frontend/
 - [ ] ใช้ Python 3.12+, FastAPI, PostgreSQL 16, Next.js, TypeScript, Tailwind CSS
-- [ ] ตั้ง .gitignore และไม่ commit secrets, .env, dependencies หรือ build artifacts
-- [ ] มี .env.example พร้อม placeholder และ config ผ่าน environment variables
-- [ ] ตั้ง Ruff และ ESLint
+- [x] ตั้ง .gitignore และไม่ commit secrets, .env, dependencies หรือ build artifacts
+- [x] มี .env.example พร้อม placeholder และ config ผ่าน environment variables
+- [x] ตั้ง Ruff และ ESLint
 - [ ] แยก routing, business rules และ data access
-- [ ] มี README.md และ AI_NOTES.md และอัปเดตระหว่างทำ
-- [ ] ทยอย commit ตามงานที่เสร็จจริง ไม่ใช่ bulk commit เดียว
+- [x] มี README.md และ AI_NOTES.md และอัปเดตระหว่างทำ
+- [x] ทยอย commit ตามงานที่เสร็จจริง ไม่ใช่ bulk commit เดียว
 
 ## 2. Database และ seed
 
@@ -108,10 +110,10 @@
 
 ## 9. AI_NOTES.md
 
-- [ ] ระบุ AI tools ที่ใช้และช่วยงานส่วนใด
-- [ ] ยกตัวอย่าง prompt ที่ได้ผล 1–2 ตัวอย่าง
-- [ ] บันทึก AI output ที่ผิด/ไม่ปลอดภัยอย่างน้อย 1 กรณีที่เกิดขึ้นจริง
-- [ ] อธิบายวิธีตรวจพบและการแก้ไข โดยไม่แต่งเหตุการณ์ขึ้น
+- [x] ระบุ AI tools ที่ใช้และช่วยงานส่วนใด
+- [x] ยกตัวอย่าง prompt ที่ได้ผล 1–2 ตัวอย่าง
+- [x] บันทึก AI output ที่ผิด/ไม่ปลอดภัยอย่างน้อย 1 กรณีที่เกิดขึ้นจริง
+- [x] อธิบายวิธีตรวจพบและการแก้ไข โดยไม่แต่งเหตุการณ์ขึ้น
 - [ ] อธิบายกระบวนการ review โค้ดจาก AI ก่อนแต่ละ commit
 - [ ] สามารถอธิบายและรับผิดชอบโค้ดที่ส่งได้ทุกส่วน
 
