@@ -1,7 +1,7 @@
 # SplitBill — Checklist
 
 ใช้คู่กับ PLAN.md ติ๊ก [x] เมื่อทำเสร็จและตรวจแล้วเท่านั้น
-อัปเดต: ขั้นตอนที่ 1 ตั้งโครงโปรเจกต์แล้ว ตรวจ health/CORS tests 2 กรณี, Ruff, ESLint, TypeScript และ build ผ่าน งานฐานข้อมูลและฟีเจอร์หลักยังไม่เริ่ม
+อัปเดต: Project setup ครบ รัน PostgreSQL 16.15 และ /ready ผ่าน; routing/services/repositories แยกแล้ว; pytest 12 กรณีและ Ruff ผ่าน ส่วน frontend checks ผ่านจากขั้นตอนก่อน เริ่ม equal split service แล้ว แต่ schema/migrations และ expense API ยังไม่เสร็จ
 
 วันที่ได้รับโจทย์: __________ | กำหนดส่ง (7 วันปฏิทิน): __________
 
@@ -9,11 +9,11 @@
 
 - [x] สร้าง Git และ GitHub repository: splitbill-take-home
 - [x] สร้าง backend/ และ frontend/
-- [ ] ใช้ Python 3.12+, FastAPI, PostgreSQL 16, Next.js, TypeScript, Tailwind CSS
+- [x] ใช้ Python 3.12+, FastAPI, PostgreSQL 16, Next.js, TypeScript, Tailwind CSS
 - [x] ตั้ง .gitignore และไม่ commit secrets, .env, dependencies หรือ build artifacts
 - [x] มี .env.example พร้อม placeholder และ config ผ่าน environment variables
 - [x] ตั้ง Ruff และ ESLint
-- [ ] แยก routing, business rules และ data access
+- [x] แยก routing, business rules และ data access
 - [x] มี README.md และ AI_NOTES.md และอัปเดตระหว่างทำ
 - [x] ทยอย commit ตามงานที่เสร็จจริง ไม่ใช่ bulk commit เดียว
 
@@ -45,7 +45,7 @@
 - [ ] รับ/ส่งเงินเป็น string และ Python ใช้ Decimal ไม่ใช้ float คำนวณเงิน
 - [ ] Reject expense amount ที่เป็นศูนย์ ติดลบ หรือเกิน 2 ตำแหน่ง
 - [ ] ตรวจยอดเกินขนาด NUMERIC(12,2) โดยไม่ปล่อยให้เป็น server error
-- [ ] Equal split แจกเศษทีละสตางค์ตามลำดับสมาชิกใน request
+- [x] Equal split แจกเศษทีละสตางค์ตามลำดับสมาชิกใน request
 - [ ] Exact shares รวมตรง amount ถึงสตางค์ มิฉะนั้น error ชัดเจน
 - [ ] Payer และผู้ร่วม split ทุกคนเป็นสมาชิกกลุ่ม
 - [ ] ตรวจ split ว่าง สมาชิกซ้ำ และ share ติดลบ

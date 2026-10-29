@@ -34,3 +34,11 @@ Codex ใช้ Set-Content -Encoding utf8 ใน Windows PowerShell เพื�
 
 บันทึกการใช้ AI ในขั้นตอนถัดไป ผลตรวจและการแก้ไขที่เกิดขึ้นจริง
 ผู้สมัครต้องยืนยันว่าอธิบายโค้ดทั้งหมดได้ และระบุเวลาทำงานจริงใน README
+
+## ต่อเติม Project setup
+
+เพิ่ม PostgreSQL 16 ผ่าน Docker Compose แบบ local-only, pooled SQLModel engine และ session dependency
+แยก readiness route → repository และกติกาเงินใน services/money.py ซึ่งไม่ import HTTP/database
+เพิ่ม tests ของการแจกเศษ ลำดับสมาชิก และยอดที่ไม่ถูกต้อง; schema และ expense API ยังไม่เสร็จ
+
+ผลตรวจ: pytest 12 passed, Ruff check/format ผ่าน, PostgreSQL 16.15 และ TestClient GET /ready คืน 200 โดยใช้ connection จริง
