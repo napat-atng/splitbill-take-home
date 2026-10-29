@@ -42,3 +42,17 @@ Codex ใช้ Set-Content -Encoding utf8 ใน Windows PowerShell เพื�
 เพิ่ม tests ของการแจกเศษ ลำดับสมาชิก และยอดที่ไม่ถูกต้อง; schema และ expense API ยังไม่เสร็จ
 
 ผลตรวจ: pytest 12 passed, Ruff check/format ผ่าน, PostgreSQL 16.15 และ TestClient GET /ready คืน 200 โดยใช้ connection จริง
+
+## Database และ seed
+
+Codex ใช้สกิล fastapi และ supabase-postgres-best-practices ช่วยออกแบบ SQLModel tables,
+constraints, indexes, Alembic migration และ seed repository/CLI
+ใช้ Alembic autogenerate เป็นจุดเริ่มต้นแล้วตรวจ migration ไม่ใช้ metadata.create_all แทน migrations
+พบว่า migration ที่ generate อ้าง sqlmodel.sql.sqltypes.AutoString โดยไม่ import sqlmodel
+Ruff แจ้ง F821 และ migration ล้มด้วย NameError จึงแก้เป็น sa.String เพื่อให้ migration ไม่พึ่ง model runtime
+หลังจากนั้นทดสอบ migrate ใหม่จากฐานข้อมูลว่างและตรวจ schema drift
+
+พบเทสต์ split_type ที่ใช้ string ยาวเกิน column limit ทำให้ PostgreSQL คืน DataError ก่อนถึง CHECK
+แก้ข้อมูลทดสอบเป็น "other" (ยาว 5 ตัว) เพื่อทดสอบ CHECK constraint ตามเจตนาโดยตรง
+Integration tests ใช้ฐานข้อมูลชั่วคราวที่สร้างใหม่เองและ cleanup หลังจบ ไม่ล้างฐานข้อมูลพัฒนา
+ผลตรวจ Database/seed: pytest 29 passed รวม PostgreSQL จริง; Ruff check/format ผ่าน และ alembic check ไม่พบ schema drift

@@ -1,7 +1,7 @@
 # SplitBill — Checklist
 
 ใช้คู่กับ PLAN.md ติ๊ก [x] เมื่อทำเสร็จและตรวจแล้วเท่านั้น
-อัปเดต: Project setup ครบ รัน PostgreSQL 16.15 และ /ready ผ่าน; routing/services/repositories แยกแล้ว; pytest 12 กรณีและ Ruff ผ่าน ส่วน frontend checks ผ่านจากขั้นตอนก่อน เริ่ม equal split service แล้ว แต่ schema/migrations และ expense API ยังไม่เสร็จ
+อัปเดต: Project setup และ Database/seed ครบแล้ว; PostgreSQL integration tests รวม unit tests 29 กรณีผ่าน, Ruff และ Alembic schema drift check ผ่าน ขั้นถัดไปคือกติกาเงินส่วนที่เหลือและ Backend API
 
 วันที่ได้รับโจทย์: __________ | กำหนดส่ง (7 วันปฏิทิน): __________
 
@@ -19,15 +19,15 @@
 
 ## 2. Database และ seed
 
-- [ ] Schema ครอบคลุม users, groups, memberships, expenses และ shares
-- [ ] มี Alembic migrations สร้าง schema จากฐานข้อมูลว่างได้
-- [ ] เงินใช้ NUMERIC(12,2) และมี constraints/foreign keys ที่จำเป็น
-- [ ] เก็บสถานะ soft delete ของ expense
-- [ ] Unique constraint สำหรับ Idempotency-Key ภายในกลุ่มเดียวกัน
-- [ ] Seed alice, bob, carol และ dan
-- [ ] Group 1: Chiang Mai trip — alice, bob, carol
-- [ ] Group 2: Office lunch — bob, dan
-- [ ] รัน seed ซ้ำแล้วไม่เกิดข้อมูลซ้ำ
+- [x] Schema ครอบคลุม users, groups, memberships, expenses และ shares
+- [x] มี Alembic migrations สร้าง schema จากฐานข้อมูลว่างได้
+- [x] เงินใช้ NUMERIC(12,2) และมี constraints/foreign keys ที่จำเป็น
+- [x] เก็บสถานะ soft delete ของ expense
+- [x] Unique constraint สำหรับ Idempotency-Key ภายในกลุ่มเดียวกัน
+- [x] Seed alice, bob, carol และ dan
+- [x] Group 1: Chiang Mai trip — alice, bob, carol
+- [x] Group 2: Office lunch — bob, dan
+- [x] รัน seed ซ้ำแล้วไม่เกิดข้อมูลซ้ำ
 
 ## 3. Backend API
 

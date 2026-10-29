@@ -1,7 +1,7 @@
 # SplitBill — Implementation Plan
 
 แผนจาก Developer-Take-Home-Test.pdf ใช้คู่กับ CHECKLIST.md
-สถานะ: ขั้นตอนที่ 1 ครบ รวม PostgreSQL 16 และการแยก routing/services/repositories; เริ่ม equal split service พร้อม tests แล้ว ขั้นถัดไปคือ schema, migrations, seed และกติกาเงินส่วนที่เหลือ
+สถานะ: Project setup และ Database/seed เสร็จแล้ว รวม migrations, constraints, seed ซ้ำและ integration tests; equal split service มีแล้ว ขั้นถัดไปคือ exact split, balances และ Backend API
 ชื่อ repository ที่แนะนำ: splitbill-take-home
 กำหนดส่ง: ภายใน 7 วันปฏิทินนับจากได้รับโจทย์ (ต้องกรอกวันที่รับและวันส่งจริง)
 
