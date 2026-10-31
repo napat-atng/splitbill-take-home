@@ -93,3 +93,14 @@ browser tests ทั้ง desktop/mobile 8 passed; backend Ruff ผ่าน (B
 Detector รันหนึ่งครั้ง พบเพียง overused-font ที่ Arial; คงไว้ตามข้อยกเว้น Operate ที่อนุญาต system UI typography
 ก่อน commit ตรวจ diff, ignore artifacts/secrets และอัปเดต README/PLAN/CHECKLIST ตามผลจริง
 Frontend ยังไม่เก็บ pending request ข้าม refresh/ปิดแท็บ; บันทึกข้อจำกัดนี้ใน README
+## Final review และ fresh clone
+
+ตรวจ code commit b9fea9a ด้วย git clone --no-local ใน directory ใหม่และติดตั้งจาก lockfiles
+แยก PostgreSQL ด้วย Compose project/volume ใหม่และ override port 55433 เพื่อไม่กระทบข้อมูลพัฒนา
+Backend 70 tests, Frontend 4 unit/8 browser tests, lint/typecheck/build และ schema drift check ผ่าน
+เปิด dev servers ตาม README จริง ตรวจ /ready, groups, หน้าเว็บ HTTP 200 และ CORS แล้วหยุด servers
+หลังกลับมาทำงานต่อ ตรวจ .last-run.json ของ fresh clone ยืนยัน passed/failedTests=[] ก่อนสรุป
+ตรวจ history 96 blobs ด้วย high-confidence key/token/private-key/credential-URL patterns และไฟล์ต้องห้าม ไม่พบ match
+ตรวจ GitHub public visibility และยืนยัน remote main ตรงกับ code commit ที่ตรวจ
+ไม่กรอกเวลาทำงานจริงหรือยืนยันความเข้าใจโค้ดแทนผู้สมัคร รายการเหล่านี้ยังรอผู้สมัคร
+ผลละเอียดและขอบเขตการตรวจอยู่ FINAL_REVIEW.md; ไม่มีการแก้ application code ในรอบ final review

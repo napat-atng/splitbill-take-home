@@ -5,7 +5,7 @@
 ## สถานะ
 
 Project setup, Database/seed, Backend API, Business rules และ Frontend เสร็จแล้ว
-Backend ผ่าน 70 กรณีจากขั้นก่อน; Frontend unit tests 4 กรณีและ browser tests 8 กรณีผ่าน รวม desktop/mobile
+ตรวจจาก fresh clone แล้ว: Backend 70 กรณี, Frontend unit tests 4 กรณีและ browser tests 8 กรณีผ่าน รวม desktop/mobile ดู FINAL_REVIEW.md
 ติดตามงานที่เหลือใน PLAN.md และ CHECKLIST.md
 
 ## Prerequisites
@@ -254,7 +254,7 @@ Runner สร้าง PostgreSQL database ชั่วคราว อัปเ
 ## ข้อจำกัดและขั้นตอนถัดไป
 
 Frontend หลักครบแล้ว; pending write/key เก็บในหน่วยความจำ ไม่กู้ข้ามการ refresh หรือปิดแท็บระหว่างส่ง
-ยังไม่ได้ตรวจ fresh clone ทั้งระบบ และยังไม่ทำ optional settle-up/payments/API containerisation
+ตรวจ fresh clone และ dev startup ตาม README แล้ว; ยังไม่ทำ optional settle-up/payments/API containerisation
 ต้องตรวจเอกสาร/เวลาที่ใช้และสิทธิ์ repository ก่อนส่ง ผู้สมัครต้องอ่านโค้ดและยืนยันว่าอธิบายได้ทั้งหมด
 
 ## เวลาที่ใช้

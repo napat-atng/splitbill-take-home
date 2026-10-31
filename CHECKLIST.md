@@ -1,7 +1,7 @@
 # SplitBill — Checklist
 
 ใช้คู่กับ PLAN.md ติ๊ก [x] เมื่อทำเสร็จและตรวจแล้วเท่านั้น
-อัปเดต: Frontend ครบและผ่าน unit tests 4 กรณี, browser tests 8 กรณี (desktop/mobile), lint/typecheck/build และรีวิวภาพหน้าจอ ขั้นถัดไปคือ final review และเตรียมส่ง
+อัปเดต: Final review และ fresh-clone verification ผ่านแล้ว: Backend 70 tests, Frontend 4 unit/8 browser tests, lint/typecheck/build ผ่าน และตรวจ repository/history แล้ว ดู FINAL_REVIEW.md; ยังต้องเติมเวลาจริงและเตรียมส่ง
 
 วันที่ได้รับโจทย์: __________ | กำหนดส่ง (7 วันปฏิทิน): __________
 
@@ -106,7 +106,8 @@
 - [x] อธิบายการแจกเศษสตางค์และ preview ให้ตรง backend
 - [x] อธิบาย idempotency รวม concurrent requests
 - [x] บันทึกความกำกวมและสมมติฐานที่เลือกใช้ทั้งหมด
-- [ ] ระบุ known limitations, next steps และเวลาที่ใช้โดยประมาณ
+- [x] ระบุ known limitations และ next steps
+- [ ] ผู้สมัครกรอกเวลาที่ใช้โดยประมาณจากการทำงานจริง
 
 ## 9. AI_NOTES.md
 
@@ -119,15 +120,15 @@
 
 ## 10. Final checks และส่งงาน
 
-- [ ] pytest ผ่านครบ
+- [x] pytest ผ่านครบ
 - [x] Ruff และ ESLint ผ่าน
 - [x] TypeScript check และ frontend production build ผ่าน
 - [x] ทดสอบใช้งานจริงตั้งแต่เลือก user/group จนเพิ่ม expense และดู balance
 - [x] ทดสอบ API การลบและสิทธิ์ผู้ลบจริง
-- [ ] ทดลอง setup/test ตาม README จาก fresh clone สำเร็จ
-- [ ] ตรวจว่าไม่มี secrets ทั้งไฟล์ปัจจุบันและ Git history
-- [ ] ตรวจ incremental commit history และเอกสารฉบับสุดท้าย
-- [ ] Repository เป็น public หรือแชร์ private กับ @alkchowpa แล้ว
+- [x] ทดลอง setup/test ตาม README จาก fresh clone สำเร็จ
+- [x] ตรวจว่าไม่มี secrets ทั้งไฟล์ปัจจุบันและ Git history
+- [x] ตรวจ incremental commit history และเอกสารฉบับสุดท้าย
+- [x] Repository เป็น public หรือแชร์ private กับ @alkchowpa แล้ว
 - [ ] ส่งลิงก์ repository ภายในกำหนด
 - [ ] เตรียม walkthrough 15 นาที, live change 20 นาที, คำถาม 10 นาที
 
