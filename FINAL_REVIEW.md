@@ -2,7 +2,7 @@
 
 สรุปผลวันที่ 31 ตุลาคม 2026 (Asia/Bangkok)
 ตรวจ runtime ของ commit `b9fea9a4716d9b720ad1931627622c95fb8022a2` เมื่อ 29 ตุลาคม และยืนยันผล browser suite ที่บันทึกไว้เมื่อกลับมาทำงานต่อ
-GitHub main ตรงกับ commit นี้ ณ การตรวจวันที่ 31 ตุลาคม
+GitHub main ตรงกับ code commit นี้ตอนเริ่มตรวจวันที่ 31 ตุลาคม; commits หลังจากนั้นเป็นเอกสาร review/handoff โดยไม่เปลี่ยน application code
 
 ## ผลรีวิว
 
@@ -55,7 +55,7 @@ Test servers หยุดแล้ว และลบ Compose container/network/
 
 - ผู้สมัครกรอกเวลาทำงานโดยประมาณและวันรับโจทย์/กำหนดส่งจริง ห้ามใช้เวลาระหว่าง commits แทนเวลาทำงานจริง
 - ผู้สมัครอ่านโค้ดและยืนยันว่าอธิบายได้ทั้งหมด พร้อมเตรียม walkthrough/live change
-- Push เอกสาร final review ล่าสุด แล้วส่งลิงก์ repository ภายในกำหนด
+- ส่งลิงก์ repository ภายในกำหนดตาม draft ใน SUBMISSION.md; มีคู่มือซ้อมใน INTERVIEW_PREP.md แล้ว
 
 ข้อจำกัดที่ยอมรับ: pending frontend write/key ไม่กู้ข้ามการ refresh/ปิดแท็บ;
 browser suite ตรวจ Chromium เท่านั้น; optional settle-up/payments/API containerisation ยังไม่ได้ทำ

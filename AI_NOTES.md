@@ -104,3 +104,9 @@ Backend 70 tests, Frontend 4 unit/8 browser tests, lint/typecheck/build แล�
 ตรวจ GitHub public visibility และยืนยัน remote main ตรงกับ code commit ที่ตรวจ
 ไม่กรอกเวลาทำงานจริงหรือยืนยันความเข้าใจโค้ดแทนผู้สมัคร รายการเหล่านี้ยังรอผู้สมัคร
 ผลละเอียดและขอบเขตการตรวจอยู่ FINAL_REVIEW.md; ไม่มีการแก้ application code ในรอบ final review
+## Submission handoff
+
+Codex เตรียม INTERVIEW_PREP.md จากโค้ดจริง พร้อม walkthrough, ประเด็นอธิบายและตัวอย่าง live change สำหรับซ้อม
+เตรียม SUBMISSION.md เป็น draft เท่านั้น ไม่ได้ส่งข้อความถึงบริษัทแทนผู้สมัคร
+ผู้สมัครต้องยืนยันเวลาจริง วันรับโจทย์ ความเข้าใจโค้ด และความถูกต้องของ AI_NOTES ด้วยตนเอง
+Optional extensions ไม่เพิ่มในรอบ handoff เพื่อคง required scope ที่ตรวจผ่านแล้ว

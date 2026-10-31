@@ -255,7 +255,7 @@ Runner สร้าง PostgreSQL database ชั่วคราว อัปเ
 
 Frontend หลักครบแล้ว; pending write/key เก็บในหน่วยความจำ ไม่กู้ข้ามการ refresh หรือปิดแท็บระหว่างส่ง
 ตรวจ fresh clone และ dev startup ตาม README แล้ว; ยังไม่ทำ optional settle-up/payments/API containerisation
-ต้องตรวจเอกสาร/เวลาที่ใช้และสิทธิ์ repository ก่อนส่ง ผู้สมัครต้องอ่านโค้ดและยืนยันว่าอธิบายได้ทั้งหมด
+Repository เป็น public และตรวจเอกสารแล้ว; ผู้สมัครยังต้องกรอกเวลาจริง อ่านโค้ด และยืนยันว่าอธิบายได้ทั้งหมด ดู SUBMISSION.md และ INTERVIEW_PREP.md
 
 ## เวลาที่ใช้
 

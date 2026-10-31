@@ -1,7 +1,7 @@
 # SplitBill — Checklist
 
 ใช้คู่กับ PLAN.md ติ๊ก [x] เมื่อทำเสร็จและตรวจแล้วเท่านั้น
-อัปเดต: Final review และ fresh-clone verification ผ่านแล้ว: Backend 70 tests, Frontend 4 unit/8 browser tests, lint/typecheck/build ผ่าน และตรวจ repository/history แล้ว ดู FINAL_REVIEW.md; ยังต้องเติมเวลาจริงและเตรียมส่ง
+อัปเดต: งานพัฒนาและตรวจทางเทคนิคครบแล้ว มี INTERVIEW_PREP.md และ SUBMISSION.md สำหรับเตรียมส่ง; รายการที่ยังว่างต้องใช้ข้อมูลหรือการยืนยันจากผู้สมัคร
 
 วันที่ได้รับโจทย์: __________ | กำหนดส่ง (7 วันปฏิทิน): __________
 
@@ -130,7 +130,8 @@
 - [x] ตรวจ incremental commit history และเอกสารฉบับสุดท้าย
 - [x] Repository เป็น public หรือแชร์ private กับ @alkchowpa แล้ว
 - [ ] ส่งลิงก์ repository ภายในกำหนด
-- [ ] เตรียม walkthrough 15 นาที, live change 20 นาที, คำถาม 10 นาที
+- [x] จัดทำคู่มือ walkthrough 15 นาที, live change 20 นาที, คำถาม 10 นาที (INTERVIEW_PREP.md)
+- [ ] ผู้สมัครซ้อม walkthrough/live change และยืนยันความเข้าใจโค้ดด้วยตนเอง
 
 ## 11. Optional — เริ่มหลังงานบังคับเสร็จและผ่าน tests
 
