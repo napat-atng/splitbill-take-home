@@ -1,9 +1,9 @@
 # SplitBill — Implementation Plan
 
 แผนจาก Developer-Take-Home-Test.pdf ใช้คู่กับ CHECKLIST.md
-สถานะ: Implementation, final review และ fresh-clone verification ผ่านแล้ว ขั้นถัดไปคือผู้สมัครกรอกเวลาทำงานจริง ทบทวนโค้ด เตรียมสัมภาษณ์ และส่ง repository
+สถานะ: Implementation และ fresh-clone verification รอบก่อนผ่านแล้ว ระบุเวลาทำงานประมาณ 10 ชั่วโมงและกำหนดส่งแล้ว ขั้นถัดไปคือทบทวนโค้ด เตรียมสัมภาษณ์ และส่ง repository ผลตรวจซ้ำและข้อจำกัดของสภาพแวดล้อมอยู่ใน FINAL_REVIEW.md
 ชื่อ repository ที่แนะนำ: splitbill-take-home
-กำหนดส่ง: ภายใน 7 วันปฏิทินนับจากได้รับโจทย์ (ต้องกรอกวันที่รับและวันส่งจริง)
+ได้รับโจทย์: 27 ตุลาคม 2026 | กำหนดส่ง: 3 พฤศจิกายน 2026 (ตามข้อมูลที่ผู้ทำแจ้ง; Asia/Bangkok)
 
 ## เป้าหมายและขอบเขต
 

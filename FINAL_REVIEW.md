@@ -1,5 +1,17 @@
 # Final review and fresh-clone verification
 
+## ตรวจซ้ำวันที่ 2 พฤศจิกายน 2026
+
+ตรวจจาก working checkout ที่ application code ตรงกับ commit `84104ab` ก่อนปรับเอกสาร ไม่ใช่ fresh clone รอบใหม่
+
+- Backend tests ที่ไม่ใช้ฐานข้อมูล: 19 passed; Ruff check/format ผ่าน
+- Frontend unit tests: 4 passed; ESLint, TypeScript และ production build ผ่าน
+- Full backend suite: 19 passed, 51 setup errors เพราะเชื่อม PostgreSQL ที่ localhost:55432 ไม่ได้ ตรวจ Docker แล้วพบว่า engine ไม่ทำงาน จึงยังยืนยัน integration tests รอบใหม่ไม่ได้
+- ไม่ได้รัน browser suite ซ้ำ เพราะต้องใช้ PostgreSQL เช่นกัน
+- ผล 70 backend / 8 browser tests ด้านล่างเป็นผลการตรวจครั้งก่อน ไม่ใช่ผลที่ยืนยันใหม่ในวันนี้
+
+## บันทึกการตรวจครั้งก่อน
+
 สรุปผลวันที่ 31 ตุลาคม 2026 (Asia/Bangkok)
 ตรวจ runtime ของ commit `b9fea9a4716d9b720ad1931627622c95fb8022a2` เมื่อ 29 ตุลาคม และยืนยันผล browser suite ที่บันทึกไว้เมื่อกลับมาทำงานต่อ
 GitHub main ตรงกับ code commit นี้ตอนเริ่มตรวจวันที่ 31 ตุลาคม; commits หลังจากนั้นเป็นเอกสาร review/handoff โดยไม่เปลี่ยน application code
@@ -53,9 +65,9 @@ Test servers หยุดแล้ว และลบ Compose container/network/
 
 ## สิ่งที่ยังต้องทำก่อนส่ง
 
-- ผู้สมัครกรอกเวลาทำงานโดยประมาณและวันรับโจทย์/กำหนดส่งจริง ห้ามใช้เวลาระหว่าง commits แทนเวลาทำงานจริง
+- ข้อมูลก่อนส่งอัปเดตแล้ว: ผู้ทำประมาณเวลารวม 10 ชั่วโมง ได้รับโจทย์ 27 ตุลาคม และกำหนดส่ง 3 พฤศจิกายน 2026
 - ผู้สมัครอ่านโค้ดและยืนยันว่าอธิบายได้ทั้งหมด พร้อมเตรียม walkthrough/live change
-- ส่งลิงก์ repository ภายในกำหนดตาม draft ใน SUBMISSION.md; มีคู่มือซ้อมใน INTERVIEW_PREP.md แล้ว
+- ส่งลิงก์ repository ภายในกำหนด; มีคู่มือซ้อมใน INTERVIEW_PREP.md แล้ว
 
 ข้อจำกัดที่ยอมรับ: pending frontend write/key ไม่กู้ข้ามการ refresh/ปิดแท็บ;
 browser suite ตรวจ Chromium เท่านั้น; optional settle-up/payments/API containerisation ยังไม่ได้ทำ

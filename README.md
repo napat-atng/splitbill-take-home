@@ -2,11 +2,17 @@
 
 แอปหารค่าใช้จ่ายในกลุ่ม — FastAPI + Next.js + PostgreSQL 16
 
-## สถานะ
+รองรับ equal/exact split, live preview, ยอดสุทธิสมาชิก และการลบโดยผู้จ่าย
+คำนวณเงินด้วย Decimal และจำนวนเต็มสตางค์ พร้อม idempotency สำหรับคำขอพร้อมกัน
 
-Project setup, Database/seed, Backend API, Business rules และ Frontend เสร็จแล้ว
-ตรวจจาก fresh clone แล้ว: Backend 70 กรณี, Frontend unit tests 4 กรณีและ browser tests 8 กรณีผ่าน รวม desktop/mobile ดู FINAL_REVIEW.md
-ติดตามงานที่เหลือใน PLAN.md และ CHECKLIST.md
+## เริ่มจาก fresh clone
+
+```powershell
+git clone https://github.com/napat-atng/splitbill-take-home.git
+cd splitbill-take-home
+```
+
+คำสั่งด้านล่างใช้ PowerShell บน shell อื่นใช้ `npm`/`npx` แทน `npm.cmd`/`npx.cmd` และคัดลอกไฟล์ env ด้วยคำสั่งของ shell นั้น
 
 ## Prerequisites
 
@@ -24,6 +30,7 @@ if (!(Test-Path backend/.env)) { Copy-Item backend/.env.example backend/.env }
 ```
 
 ตั้ง POSTGRES_PASSWORD และรหัสผ่านใน DATABASE_URL ของ backend/.env ให้ตรงกัน
+หากรหัสผ่านมีอักขระพิเศษ ต้อง URL-encode ส่วนรหัสผ่านใน DATABASE_URL
 ใช้รหัสผ่านสำหรับ local development เท่านั้น ห้าม commit .env
 ตัวอย่าง config ใช้ port 55432 บน localhost; CORS_ORIGINS เป็น JSON array ของ frontend origins
 
@@ -43,6 +50,91 @@ uv run fastapi dev
 - Compose เปิดเฉพาะฐานข้อมูลบน 127.0.0.1:55432 และเก็บข้อมูลใน named volume
 - หยุด database จาก root ด้วย `docker compose --env-file backend/.env stop db` โดยยังคงข้อมูลไว้
 - ไม่สร้าง schema อัตโนมัติที่ API startup; ใช้ Alembic เท่านั้น
+
+## Frontend
+
+```powershell
+# จาก root repository
+cd frontend
+npm.cmd ci
+if (!(Test-Path .env.local)) { Copy-Item .env.example .env.local }
+npm.cmd run dev
+```
+
+เปิด http://localhost:3000
+NEXT_PUBLIC_API_BASE_URL เป็น URL สาธารณะของ API ห้ามใส่ secrets ในตัวแปร NEXT_PUBLIC_*
+หน้าจอเป็นภาษาอังกฤษ: ฟอร์มเพิ่มรายจ่ายด้านซ้าย ยอดสุทธิด้านขวา และรายการรายจ่ายด้านล่าง
+บนมือถือเรียงเป็นคอลัมน์เดียว เลือก identity และเฉพาะกลุ่มที่มีสิทธิ์ แล้วเลือก payer และ equal/exact
+ดู allocation ก่อนบันทึก กดดูรายละเอียดส่วนแบ่งในแต่ละรายการ และลบได้เฉพาะ payer
+การลบมีปุ่มยืนยันในรายการ ไม่เปิด modal ที่ขัดจังหวะการทำงาน
+
+```powershell
+# จาก frontend/
+npm.cmd test
+npm.cmd run lint
+npm.cmd run typecheck
+npm.cmd run build
+```
+
+## Tests และ code checks
+
+หลังเปิด PostgreSQL และตั้ง backend/.env แล้ว จาก backend/ รัน suite ทั้งหมดด้วยคำสั่งเดียว:
+
+```powershell
+uv run pytest
+```
+
+รวม required API tests ทั้ง 6 กรณีและ integration tests โดยไม่ต้องตั้ง RUN_DB_TESTS
+หากพบ connection timeout ที่ port 55432 ให้ตรวจว่า Docker engine เปิดแล้ว และตรวจสถานะจาก root ด้วย `docker compose --env-file backend/.env ps` รวมถึง DATABASE_URL ก่อนรันใหม่
+ใช้ connection จาก DATABASE_URL เพื่อสร้าง database ชั่วคราวชื่อ splitbill_test_<random>
+บัญชีทดสอบต้องมีสิทธิ์ CREATE DATABASE และลบ database ที่ตนสร้าง (local Compose มีสิทธิ์นี้)
+เทสต์ migrate/seed/constraints และ HTTP API บน database ชั่วคราว แล้วลบทิ้งหลังจบ
+ไม่ downgrade หรือล้างข้อมูลของ database พัฒนา
+การตรวจ concurrent API บังคับ 4 requests ให้ไปถึงจุด insert พร้อมกันและตรวจว่าได้ expense เดียวกัน
+
+```powershell
+# รันเฉพาะ unit tests โดยไม่ใช้ PostgreSQL
+uv run pytest -m "not database"
+# ตรวจโค้ด
+uv run ruff check .
+uv run ruff format --check .
+```
+
+### Money preview และ safe retry
+
+- src/lib/money.ts แปลง string เป็น BigInt หน่วยสตางค์ก่อนคำนวณทั้งหมด ไม่ใช้ Number คำนวณเงิน
+- Equal ใช้หารจำนวนเต็มและเศษเหมือน Backend ส่งสมาชิกตาม selection order จึงแจกเศษตรงกัน
+- Exact รวมยอดแบบจำนวนเต็ม แสดงยอดยังไม่จัดสรร/เกิน และ disable Save จนยอดรวมตรง
+- ค่าใน JSON แปลงกลับเป็น decimal strings ก่อนส่งเสมอ; display จัดกลุ่มหลักพันเองโดยไม่แปลงเป็น float
+- ตัวอย่าง 100.00 หาร 3 = 33.34/33.33/33.33 และ 0.10 + 0.20 = 0.30
+- สร้าง idempotency key ต่อรายการใหม่ หากเครือข่าย/5xx ทำให้ไม่รู้ผล จะล็อกข้อมูลและ user/group
+  เพื่อ retry ด้วย payload และ key เดิม; 4xx แสดง error พร้อมคงฟอร์มให้แก้ไขได้
+- กลุ่มที่เปลี่ยนจะสร้าง workspace ใหม่และ abort reads เก่า จึงไม่แสดงข้อมูลจาก scope ก่อนหน้า
+- หลังเพิ่ม/ลบ จะโหลด balances/list ใหม่ และซ่อนยอดเดิมระหว่างอัปเดต
+
+### Browser end-to-end tests
+
+เปิด PostgreSQL ตามด้านบน ติดตั้ง frontend dependencies และ Chromium ครั้งแรก:
+
+```powershell
+# จาก frontend/
+npm.cmd ci
+npx.cmd playwright install chromium
+# จาก backend/
+uv run python -m scripts.test_frontend
+```
+
+Runner สร้าง PostgreSQL database ชั่วคราว อัปเดต migrations/seed แล้วเปิด test API บน 8001
+และ Next.js บน 3001 ก่อนรัน Playwright ทั้ง desktop (1440px) และ mobile (390px)
+ทั้งสอง port ต้องว่าง; database และ test servers ถูก cleanup หลังจบ ไม่แก้ข้อมูลพัฒนา
+ไม่ต้องรัน npm run dev หรือ API test server เอง และไม่ควรชี้ browser tests ไปยัง database งานจริง
+
+ครอบคลุม equal/exact preview, การบันทึกและยอดจริง, payer-only deletion, ข้อผิดพลาดจาก API,
+การเปลี่ยนผู้ใช้โดยไม่แสดงข้อมูลค้าง และคำตอบหายหลังบันทึกซึ่ง retry ต้องมีเพียงหนึ่ง expense
+ภาพหลักอยู่ frontend/test-results/screenshots/desktop.png และ mobile.png; artifacts ไม่เข้า Git
+
+ผล full-suite/fresh-clone verification ที่บันทึกไว้: Backend 70 tests, Frontend 4 unit tests และ 8 browser tests ผ่าน พร้อม lint/typecheck/build
+ดูวันที่ commit และขอบเขตการตรวจใน [FINAL_REVIEW.md](FINAL_REVIEW.md)
 
 ## Backend API
 
@@ -155,91 +247,6 @@ Seed: alice, bob, carol, dan; group 1 Chiang Mai trip (alice, bob, carol); group
 ปรับ group identity sequence ไม่ให้สร้างกลุ่มใหม่ชน ID ที่ seed ไว้
 Downgrade ใช้เพื่อพัฒนา/ทดสอบเท่านั้น เพราะลบตารางและข้อมูลของ migration นั้น
 
-## Tests และ code checks
-
-หลังเปิด PostgreSQL และตั้ง backend/.env แล้ว จาก backend/ รัน suite ทั้งหมดด้วยคำสั่งเดียว:
-
-```powershell
-uv run pytest
-```
-
-รวม required API tests ทั้ง 6 กรณีและ integration tests โดยไม่ต้องตั้ง RUN_DB_TESTS
-ใช้ connection จาก DATABASE_URL เพื่อสร้าง database ชั่วคราวชื่อ splitbill_test_<random>
-บัญชีทดสอบต้องมีสิทธิ์ CREATE DATABASE และลบ database ที่ตนสร้าง (local Compose มีสิทธิ์นี้)
-เทสต์ migrate/seed/constraints และ HTTP API บน database ชั่วคราว แล้วลบทิ้งหลังจบ
-ไม่ downgrade หรือล้างข้อมูลของ database พัฒนา
-การตรวจ concurrent API บังคับ 4 requests ให้ไปถึงจุด insert พร้อมกันและตรวจว่าได้ expense เดียวกัน
-
-```powershell
-# รันเฉพาะ unit tests โดยไม่ใช้ PostgreSQL
-uv run pytest -m "not database"
-# ตรวจโค้ด
-uv run ruff check .
-uv run ruff format --check .
-```
-
-## Frontend
-
-```powershell
-# จาก root repository
-cd frontend
-npm.cmd ci
-if (!(Test-Path .env.local)) { Copy-Item .env.example .env.local }
-npm.cmd run dev
-```
-
-เปิด http://localhost:3000
-NEXT_PUBLIC_API_BASE_URL เป็น URL สาธารณะของ API ห้ามใส่ secrets ในตัวแปร NEXT_PUBLIC_*
-หน้าจอเป็นภาษาอังกฤษ: ฟอร์มเพิ่มรายจ่ายด้านซ้าย ยอดสุทธิด้านขวา และรายการรายจ่ายด้านล่าง
-บนมือถือเรียงเป็นคอลัมน์เดียว เลือก identity และเฉพาะกลุ่มที่มีสิทธิ์ แล้วเลือก payer และ equal/exact
-ดู allocation ก่อนบันทึก กดดูรายละเอียดส่วนแบ่งในแต่ละรายการ และลบได้เฉพาะ payer
-การลบมีปุ่มยืนยันในรายการ ไม่เปิด modal ที่ขัดจังหวะการทำงาน
-
-```powershell
-# จาก frontend/
-npm.cmd test
-npm.cmd run lint
-npm.cmd run typecheck
-npm.cmd run build
-```
-
-### Money preview และ safe retry
-
-- src/lib/money.ts แปลง string เป็น BigInt หน่วยสตางค์ก่อนคำนวณทั้งหมด ไม่ใช้ Number คำนวณเงิน
-- Equal ใช้หารจำนวนเต็มและเศษเหมือน Backend ส่งสมาชิกตาม selection order จึงแจกเศษตรงกัน
-- Exact รวมยอดแบบจำนวนเต็ม แสดงยอดยังไม่จัดสรร/เกิน และ disable Save จนยอดรวมตรง
-- ค่าใน JSON แปลงกลับเป็น decimal strings ก่อนส่งเสมอ; display จัดกลุ่มหลักพันเองโดยไม่แปลงเป็น float
-- ตัวอย่าง 100.00 หาร 3 = 33.34/33.33/33.33 และ 0.10 + 0.20 = 0.30
-- สร้าง idempotency key ต่อรายการใหม่ หากเครือข่าย/5xx ทำให้ไม่รู้ผล จะล็อกข้อมูลและ user/group
-  เพื่อ retry ด้วย payload และ key เดิม; 4xx แสดง error พร้อมคงฟอร์มให้แก้ไขได้
-- กลุ่มที่เปลี่ยนจะสร้าง workspace ใหม่และ abort reads เก่า จึงไม่แสดงข้อมูลจาก scope ก่อนหน้า
-- หลังเพิ่ม/ลบ จะโหลด balances/list ใหม่ และซ่อนยอดเดิมระหว่างอัปเดต
-
-### Browser end-to-end tests
-
-เปิด PostgreSQL ตามด้านบน ติดตั้ง frontend dependencies และ Chromium ครั้งแรก:
-
-```powershell
-# จาก frontend/
-npm.cmd ci
-npx.cmd playwright install chromium
-# จาก backend/
-uv run python -m scripts.test_frontend
-```
-
-Runner สร้าง PostgreSQL database ชั่วคราว อัปเดต migrations/seed แล้วเปิด test API บน 8001
-และ Next.js บน 3001 ก่อนรัน Playwright ทั้ง desktop (1440px) และ mobile (390px)
-ทั้งสอง port ต้องว่าง; database และ test servers ถูก cleanup หลังจบ ไม่แก้ข้อมูลพัฒนา
-ไม่ต้องรัน npm run dev หรือ API test server เอง และไม่ควรชี้ browser tests ไปยัง database งานจริง
-
-ครอบคลุม equal/exact preview, การบันทึกและยอดจริง, payer-only deletion, ข้อผิดพลาดจาก API,
-การเปลี่ยนผู้ใช้โดยไม่แสดงข้อมูลค้าง และคำตอบหายหลังบันทึกซึ่ง retry ต้องมีเพียงหนึ่ง expense
-ภาพหลักอยู่ frontend/test-results/screenshots/desktop.png และ mobile.png; artifacts ไม่เข้า Git
-
-ผลตรวจล่าสุด: unit tests 4 passed, browser tests 8 passed, ESLint/TypeScript/build และ Ruff ผ่าน
-รีวิวภาพหน้าจอแยกจากผู้เขียนได้ disposition: ship; detector พบเพียงข้อเสนอเรื่อง system font
-ซึ่งเลือกใช้โดยตั้งใจสำหรับหน้าจอ Operate ตามขอบเขต take-home
-
 ## โครงสร้าง
 
 - backend/app/api: routing, headers, user/group dependencies และ HTTP response status
@@ -253,10 +260,13 @@ Runner สร้าง PostgreSQL database ชั่วคราว อัปเ
 
 ## ข้อจำกัดและขั้นตอนถัดไป
 
-Frontend หลักครบแล้ว; pending write/key เก็บในหน่วยความจำ ไม่กู้ข้ามการ refresh หรือปิดแท็บระหว่างส่ง
-ตรวจ fresh clone และ dev startup ตาม README แล้ว; ยังไม่ทำ optional settle-up/payments/API containerisation
-Repository เป็น public และตรวจเอกสารแล้ว; ผู้สมัครยังต้องกรอกเวลาจริง อ่านโค้ด และยืนยันว่าอธิบายได้ทั้งหมด ดู SUBMISSION.md และ INTERVIEW_PREP.md
+- Pending write/key เก็บในหน่วยความจำ ไม่กู้ข้าม refresh หรือปิดแท็บระหว่างส่ง ขั้นถัดไปคือเก็บ pending request ใน session storage พร้อม flow กู้คืนก่อนเริ่มรายการใหม่
+- Browser tests ครอบคลุม Chromium desktop/mobile สามารถเพิ่ม Firefox/WebKit เพื่อทดสอบข้าม browser
+- ยังไม่ทำ optional settle-up, repayments และ Compose ที่เปิด API พร้อม PostgreSQL ด้วยคำสั่งเดียว Compose ปัจจุบันเปิดเฉพาะฐานข้อมูล
+- ใช้ X-User ตามขอบเขตโจทย์ หากนำไปใช้งานจริงต้องเพิ่ม authentication
+
+การใช้ AI และตัวอย่างข้อผิดพลาด/การแก้ไขอยู่ใน [AI_NOTES.md](AI_NOTES.md)
 
 ## เวลาที่ใช้
 
-ยังไม่ได้รับข้อมูลเวลาทำงานจริงจากผู้ทำ ต้องบันทึกและรวมเวลาจริงก่อนส่งงาน
+ประมาณ 10 ชั่วโมง รวมการพัฒนา ทบทวน และทดสอบ เป็นการประมาณจากเวลาทำงานจริง ไม่ได้คำนวณจากช่วงเวลาระหว่าง commits
